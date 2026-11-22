@@ -1,0 +1,2639 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web App Mastery — Complete Web Application Development Learning Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&family=Source+Serif+4:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+/* ==========================================================================
+   Web App Mastery — Color System & Themes (css/themes.css)
+   Warm Cream, Beige, Coffee Brown & Espresso Palette (Zero Blue/Purple)
+   ========================================================================== */
+
+:root {
+  --bg: #F6F1E7;
+  --surface: #FCF9F3;
+  --beige: #EAE1D2;
+  --coffee: #5C3D2E;
+  --coffee-hover: #462D21;
+  --coffee-soft: rgba(92, 61, 46, 0.10);
+  --cinnamon: #9C5B38;
+  --text: #2A201A;
+  --muted: #6E5F55;
+  --border: #DDD2C2;
+
+  --ok: #3D5E3A;
+  --ok-bg: #E7F0E5;
+  --err: #96352A;
+  --err-bg: #F6E6E3;
+  --warn: #8E6522;
+  --warn-bg: #F5EEE0;
+
+  --code-bg: #241D18;
+  --code-fg: #F4EDE2;
+
+  --font-en: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Source Serif 4', Georgia, serif;
+  --font-ar: 'Cairo', 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --radius: 6px;
+  --shadow: 0 1px 3px rgba(42, 32, 26, 0.06);
+  --sidebar-w: 252px;
+}
+
+[data-theme="dark"] {
+  --bg: #181310;
+  --surface: #241D18;
+  --beige: #312822;
+  --coffee: #C99A72;
+  --coffee-hover: #B8865D;
+  --coffee-soft: rgba(201, 154, 114, 0.14);
+  --cinnamon: #D79C6E;
+  --text: #F4EDE2;
+  --muted: #B7A99A;
+  --border: #3D322B;
+
+  --ok: #8DB888;
+  --ok-bg: rgba(61, 94, 58, 0.34);
+  --err: #E68F85;
+  --err-bg: rgba(150, 53, 42, 0.30);
+  --warn: #DFB874;
+  --warn-bg: rgba(142, 101, 34, 0.28);
+
+  --code-bg: #120E0C;
+  --code-fg: #F4EDE2;
+
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.36);
+}
+
+
+/* ==========================================================================
+   Web App Mastery — Core Layout & Components (css/style.css)
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { font-size: 16px; overflow-x: hidden; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-en);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+[dir="rtl"] body { font-family: var(--font-ar); }
+button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+button { cursor: pointer; }
+code, pre { font-family: var(--font-mono); }
+
+/* Shell */
+.app-shell { display: flex; min-height: 100vh; width: 100%; }
+
+.sidebar {
+  position: fixed; top: 0; bottom: 0; inset-inline-start: 0;
+  width: var(--sidebar-w); background-color: var(--surface);
+  border-inline-end: 1px solid var(--border);
+  padding: 18px 14px; display: flex; flex-direction: column; gap: 12px;
+  z-index: 150; transform: translateX(-105%);
+  transition: transform 0.22s ease; overflow-y: auto;
+}
+[dir="rtl"] .sidebar { transform: translateX(105%); }
+.sidebar.open { transform: translateX(0); }
+
+.sidebar-backdrop {
+  position: fixed; inset: 0; background: rgba(24, 19, 16, 0.5);
+  display: none; z-index: 140;
+}
+.sidebar-backdrop.open { display: block; }
+
+.brand-box {
+  padding: 6px 10px 14px; border-bottom: 1px solid var(--border);
+}
+.brand-title { font-family: var(--font-serif); font-weight: 800; font-size: 1.08rem; color: var(--coffee); letter-spacing: -0.01em; }
+.brand-sub { font-size: 0.74rem; color: var(--muted); }
+
+.side-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.side-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 9px 12px; border-radius: 4px;
+  background: transparent; border: 1px solid transparent;
+  font-size: 0.87rem; font-weight: 600; color: var(--muted); text-align: start;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.side-btn:hover { background-color: var(--beige); color: var(--text); }
+.side-btn.active { background-color: #5C3D2E; color: #FCF9F3; }
+
+.content-area { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+.topbar {
+  position: sticky; top: 0; z-index: 100; height: 60px;
+  background-color: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.breadcrumb { font-size: 0.86rem; font-weight: 700; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.topbar-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+.ctrl-btn {
+  min-height: 36px; padding: 6px 10px; border-radius: 4px;
+  background-color: var(--beige); border: 1px solid var(--border);
+  font-size: 0.82rem; font-weight: 700;
+}
+.ctrl-btn:hover { border-color: var(--coffee); }
+
+.main-inner { max-width: 1100px; width: 100%; margin: 0 auto; padding: 20px 16px 68px; }
+.view { display: none; animation: fadeIn 0.2s ease; }
+.view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Common Components */
+.page-head { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.eyebrow { font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--cinnamon); }
+.page-title { margin: 4px 0 4px; font-family: var(--font-serif); font-size: 1.65rem; line-height: 1.25; }
+[dir="rtl"] .page-title { font-family: var(--font-ar); }
+.page-sub { margin: 0; font-size: 0.92rem; color: var(--muted); }
+
+.card { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.card-beige { background-color: var(--beige); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 38px; padding: 7px 15px; border-radius: 4px;
+  font-size: 0.88rem; font-weight: 600; border: 1px solid transparent; white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.btn-primary { background-color: #5C3D2E; color: #FCF9F3; border-color: #5C3D2E; }
+.btn-primary:hover { background-color: #462D21; }
+.btn-secondary { background-color: var(--surface); color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background-color: var(--beige); border-color: var(--coffee); }
+.btn-danger { background-color: var(--err); color: #FCF9F3; }
+.btn-sm { min-height: 32px; padding: 5px 11px; font-size: 0.82rem; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-size: 0.74rem; font-weight: 700; }
+.badge-ok { background-color: var(--ok-bg); color: var(--ok); }
+.badge-err { background-color: var(--err-bg); color: var(--err); }
+.badge-warn { background-color: var(--warn-bg); color: var(--warn); }
+.badge-beige { background-color: var(--beige); color: var(--muted); border: 1px solid var(--border); }
+
+.input, .select, .textarea {
+  width: 100%; padding: 8px 12px; background-color: var(--surface);
+  border: 1px solid var(--border); border-radius: 4px; color: var(--text);
+}
+.input, .select { min-height: 38px; }
+.textarea { min-height: 120px; resize: vertical; line-height: 1.55; }
+.code-editor {
+  width: 100%; min-height: 170px; padding: 12px; border-radius: 4px;
+  background-color: var(--code-bg); color: var(--code-fg);
+  border: 1px solid var(--border); font-family: var(--font-mono);
+  font-size: 0.86rem; line-height: 1.55; resize: vertical;
+}
+.input:focus, .select:focus, .textarea:focus, .code-editor:focus { outline: 2px solid var(--coffee); outline-offset: 1px; }
+
+.stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px; }
+.stat-box { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+.stat-k { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+.stat-v { font-size: 1.44rem; font-weight: 800; margin-top: 4px; font-variant-numeric: tabular-nums; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr; gap: 14px; }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.tab {
+  padding: 6px 11px; border-radius: 4px; background-color: var(--surface);
+  border: 1px solid var(--border); font-size: 0.82rem; font-weight: 600; color: var(--muted);
+}
+.tab.active { background-color: #5C3D2E; color: #FCF9F3; border-color: #5C3D2E; }
+
+.progress-track { width: 100%; height: 8px; background-color: var(--beige); border-radius: 3px; overflow: hidden; }
+.progress-fill { height: 100%; background-color: var(--coffee); transition: width 0.3s ease; }
+
+/* Code, Preview & Tables */
+.code-box {
+  background-color: var(--code-bg); color: var(--code-fg); padding: 13px 15px;
+  border-radius: 4px; overflow-x: auto; font-size: 0.85rem; line-height: 1.55;
+  margin: 8px 0; white-space: pre-wrap; word-break: break-word;
+}
+.preview-frame {
+  width: 100%; min-height: 220px; border: 1px solid var(--border);
+  border-radius: 4px; background-color: #FFFFFF;
+}
+.demo-box {
+  background-color: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; padding: 14px; margin-top: 8px;
+}
+
+.table-wrap { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 4px; margin: 10px 0; }
+.table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+.table th, .table td { padding: 8px 11px; text-align: start; border-bottom: 1px solid var(--border); }
+.table th { background-color: var(--beige); font-weight: 700; }
+
+/* Options & Feedback */
+.opt-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.opt-btn {
+  display: flex; align-items: flex-start; gap: 10px; width: 100%;
+  padding: 12px 14px; text-align: start; background-color: var(--beige);
+  border: 1px solid var(--border); border-radius: 4px; font-size: 0.91rem;
+}
+.opt-btn:hover:not(:disabled) { border-color: var(--coffee); }
+.opt-btn.selected { border-color: var(--coffee); background-color: var(--coffee-soft); font-weight: 600; }
+.opt-btn.ok { border-color: var(--ok); background-color: var(--ok-bg); font-weight: 700; }
+.opt-btn.err { border-color: var(--err); background-color: var(--err-bg); }
+.opt-key { min-width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; background-color: var(--surface); border: 1px solid var(--border); font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+
+.fb-box { margin-top: 12px; padding: 12px 14px; border-radius: 4px; border: 1px solid var(--border); font-size: 0.89rem; }
+.fb-box.ok { background-color: var(--ok-bg); border-color: var(--ok); }
+.fb-box.err { background-color: var(--err-bg); border-color: var(--err); }
+.fb-box.warn { background-color: var(--warn-bg); border-color: var(--warn); }
+
+.ar-box {
+  background-color: var(--beige); border-inline-start: 3px solid var(--cinnamon);
+  padding: 13px 15px; border-radius: 4px; direction: rtl; text-align: right;
+  font-family: var(--font-ar); font-size: 0.94rem;
+}
+
+.kw-chip { display: inline-flex; padding: 3px 8px; border-radius: 4px; font-size: 0.78rem; font-weight: 700; border: 1px solid var(--border); background: var(--beige); font-family: var(--font-mono); }
+.kw-chip.hit { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+
+/* Flashcard */
+.flash-card {
+  max-width: 680px; margin: 0 auto 16px; min-height: 235px;
+  background-color: var(--surface); border: 1px solid var(--border);
+  border-top: 4px solid #5C3D2E; border-radius: var(--radius);
+  padding: 24px 20px; display: flex; flex-direction: column; justify-content: center; gap: 10px;
+  cursor: pointer; transition: transform 0.2s ease;
+}
+.flash-card:hover { transform: translateY(-2px); }
+
+/* Modal & Toast */
+.modal-bg { position: fixed; inset: 0; background: rgba(24, 19, 16, 0.58); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 250; }
+.modal-bg.open { display: flex; }
+.modal-box { background-color: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); max-width: 440px; width: 100%; padding: 20px; }
+.toast { position: fixed; bottom: 20px; inset-inline-end: 20px; z-index: 300; background-color: #2A201A; color: #FCF9F3; padding: 10px 16px; border-radius: 4px; border-inline-start: 4px solid #C99A72; font-size: 0.86rem; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+.toast.show { opacity: 1; }
+.empty-box { text-align: center; padding: 24px 16px; background-color: var(--beige); border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); }
+
+
+/* ==========================================================================
+   Web App Mastery — Responsive Breakpoints (css/responsive.css)
+   ========================================================================== */
+
+@media (min-width: 768px) {
+  .main-inner { padding: 26px 24px 72px; }
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .sidebar { position: sticky; transform: none !important; height: 100vh; flex-shrink: 0; }
+  .mobile-menu-btn, .sidebar-backdrop { display: none !important; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 420px) {
+  .card { padding: 14px; }
+  .ctrl-btn { padding: 5px 8px; font-size: 0.76rem; }
+  .page-title { font-size: 1.4rem; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Primary Navigation">
+      <div class="brand-box">
+        <div class="brand-title">Web App Mastery</div>
+        <div class="brand-sub" id="brand-sub">Web App Development Hub</div>
+      </div>
+      <nav class="side-nav" id="side-nav"></nav>
+      <div style="font-size:0.74rem;color:var(--muted);padding:8px 10px;border-top:1px solid var(--border);">
+        HTML5 · CSS3 · Vanilla JS
+      </div>
+    </aside>
+
+    <div class="content-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button type="button" class="ctrl-btn mobile-menu-btn" id="btn-menu" aria-label="Open Navigation">☰</button>
+          <div class="breadcrumb" id="breadcrumb">Dashboard</div>
+        </div>
+        <div class="topbar-right">
+          <button type="button" class="ctrl-btn" id="btn-lang" aria-label="Switch Language">عربي</button>
+          <button type="button" class="ctrl-btn" id="btn-theme" aria-label="Toggle Theme">Dark</button>
+        </div>
+      </header>
+
+      <main class="main-inner">
+        <section class="view active" id="view-home"></section>
+        <section class="view" id="view-lessons"></section>
+        <section class="view" id="view-playground"></section>
+        <section class="view" id="view-qbank"></section>
+        <section class="view" id="view-mcq"></section>
+        <section class="view" id="view-essay"></section>
+        <section class="view" id="view-exam"></section>
+        <section class="view" id="view-games"></section>
+        <section class="view" id="view-flashcards"></section>
+        <section class="view" id="view-progress"></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modal-bg" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <h3 id="modal-title" style="margin:0 0 8px;font-family:var(--font-serif);"></h3>
+      <p id="modal-body" style="margin:0 0 16px;font-size:0.9rem;color:var(--muted);"></p>
+      <div style="display:flex;justify-content:flex-end;gap:8px;">
+        <button type="button" class="btn btn-secondary btn-sm" id="modal-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" id="modal-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+/* ==========================================================================
+   Web App Mastery — LocalStorage Manager (js/storage.js)
+   Persists progress, study streak, daily goal, scores, code attempts & theme.
+   ========================================================================== */
+
+window.WAM_STORAGE = (function () {
+  var KEY = 'wam_learning_hub_v1';
+  var mem = null;
+
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function yesterday() {
+    var d = new Date(Date.now() - 86400000);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function defaults() {
+    return {
+      lang: 'en',
+      theme: 'light',
+      lastLessonId: 'l1',
+      completedLessons: [],
+      dailyGoal: 10,
+      dailyDone: 0,
+      streak: 1,
+      lastDate: today(),
+      qBankCompleted: [],
+      qBankFavorites: [],
+      qBankDifficult: [],
+      mcqStats: {},         /* qId -> { attempts, correct, wrong } */
+      examHistory: [],      /* { ts, mode, correct, total, pct } */
+      essayDrafts: {},      /* essayId -> { text, rubricScore, tagHits, tagTotal, savedAt } */
+      flashStatus: {},      /* cardId -> 'know' | 'dont' */
+      gameBest: {},         /* gameId -> bestScore */
+      recentActivity: []
+    };
+  }
+
+  function load() {
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (!raw) return defaults();
+      return Object.assign(defaults(), JSON.parse(raw));
+    } catch (e) {
+      return mem ? Object.assign(defaults(), mem) : defaults();
+    }
+  }
+
+  function save(st) {
+    mem = st;
+    try { window.localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
+  }
+
+  function update(fn) {
+    var st = load();
+    var td = today();
+    if (st.lastDate !== td) {
+      st.streak = (st.lastDate === yesterday()) ? (st.streak || 1) + 1 : 1;
+      st.lastDate = td;
+      st.dailyDone = 0;
+    }
+    fn(st);
+    save(st);
+    return st;
+  }
+
+  function log(st, title, detail) {
+    st.recentActivity = st.recentActivity || [];
+    st.recentActivity.unshift({ title: title, detail: detail, ts: Date.now() });
+    if (st.recentActivity.length > 15) st.recentActivity = st.recentActivity.slice(0, 15);
+  }
+
+  function recordMcq(qId, isCorrect) {
+    return update(function (st) {
+      st.dailyDone += 1;
+      var s = st.mcqStats[qId] || { attempts: 0, correct: 0, wrong: 0 };
+      s.attempts += 1;
+      if (isCorrect) s.correct += 1; else s.wrong += 1;
+      st.mcqStats[qId] = s;
+    });
+  }
+
+  function saveGameBest(gameId, score) {
+    return update(function (st) {
+      if (!st.gameBest[gameId] || score > st.gameBest[gameId]) st.gameBest[gameId] = score;
+      st.dailyDone += 1;
+      log(st, 'Game: ' + gameId, 'Score: ' + score);
+    });
+  }
+
+  function resetAll() { var d = defaults(); save(d); return d; }
+
+  return { KEY: KEY, load: load, save: save, update: update, log: log, recordMcq: recordMcq, saveGameBest: saveGameBest, resetAll: resetAll };
+})();
+
+
+/* ==========================================================================
+   Web App Mastery — Complete Syllabus Knowledge Base (js/data.js)
+   Source: Web Application Development – Midterm Question Bank (13 Questions)
+   Includes: 13 Lessons, 26 MCQs, 13 Essay & Coding Exercises, 20 Flashcards,
+   6 Educational Games, and Live Playground Presets.
+   ========================================================================== */
+
+window.WAM_DATA = {
+  lessons: [
+    {
+      id: 'l1', num: 1,
+      titleEn: 'HTML Background Colors (Names, RGB, HEX)',
+      titleAr: 'ألوان خلفية الصفحة (الأسماء و RGB و HEX)',
+      origQuestion: '1. Write code HTML for Set the background color by the following ways: Color Names, RGB Color Values, HEX Color Values',
+      shortAnswer: 'Use the inline style attribute with background-color on <body>: color name (yellow), RGB value (rgb(255, 0, 0)), or HEX code (#ff0000).',
+      pdfErrorNote: 'Source PDF Note: The original PDF wrote < body style="background-color: color:#ff0000;"> which has two syntax errors: (1) an extra space after < in "< body", and (2) an invalid "color:" keyword inside background-color. The technically correct code is: <body style="background-color: #ff0000;"></body>.',
+      arExplain: 'علشان تغير لون خلفية الصفحة في HTML، بتضيف خاصية style جوه وسم <body> وتكتب background-color وبعدها اللون بواحدة من 3 طرق: اسم اللون (زي yellow)، أو نظام RGB اللي بياخد 3 أرقام للأحمر والأخضر والأزرق من 0 لـ 255 (زي rgb(255, 0, 0) للأحمر)، أو نظام HEX اللي بيبدأ بعلامة # وبعدها 6 خانات (زي #ff0000 للأحمر). خد بالك إن ملف المراجعة فيه غلطة مطبعية في مثال الـ HEX كتب color:#ff0000 جوه background-color وده غلط؛ الصح نكتب background-color: #ff0000; على طول.',
+      tags: [
+        { name: '<body>', desc: 'Holds the visible page content; styling its background-color colors the entire viewport.' },
+        { name: 'style="..."', desc: 'Inline CSS attribute used to apply visual properties like background-color.' },
+        { name: 'background-color', desc: 'CSS property that sets the background color using a Color Name, RGB, or HEX value.' }
+      ],
+      codeExample: '<!-- 1. Color Name -->\n<body style="background-color: yellow;"></body>\n\n<!-- 2. RGB Color Value (Red=255, Green=0, Blue=0) -->\n<body style="background-color: rgb(255, 0, 0);"></body>\n\n<!-- 3. HEX Color Value (Corrected Syntax) -->\n<body style="background-color: #ff0000;"></body>',
+      practical: 'yellow = standard CSS color name; rgb(255, 0, 0) and #ff0000 both produce pure red (255 in decimal equals ff in hexadecimal).',
+      expectedOutput: 'The entire browser page background turns bright yellow (first snippet) or solid red (second and third snippets).',
+      mistakes: [
+        'Writing background-color: color:#ff0000; (extra "color:" invalidates the CSS rule — copied from PDF typo).',
+        'Leaving a space after the opening bracket like < body> instead of <body>.',
+        'Forgetting the # symbol before a HEX code or using RGB values above 255.'
+      ],
+      keywords: ['style', 'background-color', 'yellow', 'rgb(255, 0, 0)', '#ff0000', '<body>'],
+      summary: 'Three ways for background-color: Name (yellow), RGB (rgb(255,0,0)), HEX (#ff0000). Never write "color:" inside background-color!',
+      exercise: 'Try writing a <body> tag with a warm beige HEX color (#EAE1D2) in the Code Playground.',
+      interactiveType: 'colors',
+      miniQuizIds: ['mcq-1', 'mcq-2']
+    },
+    {
+      id: 'l2', num: 2,
+      titleEn: 'Basic HTML Structure (html, body, h1, p)',
+      titleAr: 'الهيكل الأساسي لصفحة HTML',
+      origQuestion: '2. Write code HTML for contains four HTML elements (<html>, <body>, <h1> and <p>):',
+      shortAnswer: 'Wrap the document in <html>...</html>, place visible elements inside <body>...</body>, use <h1> for the main heading, and <p> for paragraph text.',
+      arExplain: 'أي صفحة HTML بسيطة بتتكون من 4 عناصر أساسية: <html> ده الجذر اللي بيحتوي الصفحة كلها، وجواه <body> اللي بنحط فيه كل حاجة بتظهر للمستخدم على الشاشة. جوه الـ body بنستخدم <h1> للعنوان الرئيسي الكبير، و <p> لكتابة فقرة نصية. مهم جداً تقفل كل وسم بالترتيب الصحيح باستخدام / زي </h1> و </html>.',
+      tags: [
+        { name: '<html>', desc: 'Root element that wraps the entire HTML document.' },
+        { name: '<body>', desc: 'Container for all visible content rendered in the browser.' },
+        { name: '<h1>', desc: 'Defines the most important top-level heading.' },
+        { name: '<p>', desc: 'Defines a text paragraph with automatic vertical spacing.' }
+      ],
+      codeExample: '<html>\n<body>\n\n<h1>My First Heading</h1>\n<p>My first paragraph.</p>\n\n</body>\n</html>',
+      practical: 'Every webpage starts with this skeleton before adding images, tables, forms, or styles.',
+      expectedOutput: 'A large bold heading "My First Heading" followed on a new line by normal paragraph text "My first paragraph.".',
+      mistakes: [
+        'Forgetting closing tags like </h1>, </p>, </body>, or </html>.',
+        'Placing <h1> or <p> outside the <body> element.'
+      ],
+      keywords: ['<html>', '<body>', '<h1>', '<p>', 'opening tag', 'closing tag'],
+      summary: 'html wraps everything -> body wraps visible content -> h1 is main heading -> p is paragraph.',
+      exercise: 'Create a mini profile page using <html>, <body>, <h1> with your name, and <p> with your major.',
+      interactiveType: 'preview',
+      miniQuizIds: ['mcq-3', 'mcq-4']
+    },
+    {
+      id: 'l3', num: 3,
+      titleEn: 'Insert Images (img, src, alt)',
+      titleAr: 'إدراج الصور باستخدام img و src و alt',
+      origQuestion: '3. Write code HTML for insert Image hitu.jpg. with src, alt attributes',
+      shortAnswer: '<img src="hitu.jpg" alt="HITU Photo"> — <img> is an empty (void) element; src sets the image path and alt provides alternative text.',
+      pdfErrorNote: 'Source PDF Note: The question asks for "hitu.jpg", while the PDF answer prints src="pic_ hitu.jpg" with an extra "pic_ " prefix and space. Always match the exact requested filename: src="hitu.jpg" without stray spaces.',
+      arExplain: 'وسم <img> بيضيف صورة للصفحة وهو وسم مفرد ملوش قفلة (يعني مفيش </img>). أهم خاصيتين فيه هما: src (المصدر) اللي بنكتب فيها مسار واسم ملف الصورة بالامتداد زي .jpg أو .png، و alt (النص البديل) اللي بيظهر لو الصورة محملتش وكمان بيساعد قارئات الشاشة للمكفوفين ومحركات البحث.',
+      tags: [
+        { name: '<img>', desc: 'Void/self-contained element that embeds an image into the page (no closing tag).' },
+        { name: 'src', desc: 'Specifies the relative or absolute file path and extension (e.g., hitu.jpg, logo.png).' },
+        { name: 'alt', desc: 'Alternative text displayed if the image fails to load and read by screen readers.' }
+      ],
+      codeExample: '<img src="hitu.jpg" alt="HITU Photo">',
+      practical: 'Common web image extensions: .jpg/.jpeg (photos), .png (transparency), .svg (crisp icons/logos), .webp (modern compressed images).',
+      expectedOutput: 'Displays the hitu.jpg image inline; if the file is missing, the browser displays "HITU Photo" instead.',
+      mistakes: [
+        'Writing a closing </img> tag (invalid HTML).',
+        'Including accidental spaces or wrong file extensions in src (e.g., "pic_ hitu.jpg").',
+        'Omitting the alt attribute (hurts accessibility and exam grading).'
+      ],
+      keywords: ['<img>', 'src', 'alt', 'hitu.jpg', 'HITU Photo', 'void element'],
+      summary: '<img> has no closing tag; always include src="file.ext" and alt="description".',
+      exercise: 'Insert an image tag with a broken src in the Playground to see how the browser renders your alt text.',
+      interactiveType: 'image',
+      miniQuizIds: ['mcq-5', 'mcq-6']
+    },
+    {
+      id: 'l4', num: 4,
+      titleEn: 'HTML Tables (table, tr, th, td)',
+      titleAr: 'إنشاء الجداول في HTML',
+      origQuestion: '4. Write code HTML Tables for create the following table: No Student | Student Name | Student Deg (1 Ahmad 85, 2 Michael 86)',
+      shortAnswer: 'Use <table> to start the table, <tr> for each row, <th> for header cells (bold & centered), and <td> for regular data cells.',
+      arExplain: 'الجدول في HTML بيتبني صف بصف: بتبدأ بـ <table>، وكل صف بتحطه جوه <tr> (اختصار Table Row). في الصف الأول للعناوين بنستخدم <th> (Table Header) وبتظهر خط عريض في النص، وفي صفوف البيانات العادية بنستخدم <td> (Table Data).',
+      tags: [
+        { name: '<table>', desc: 'Defines the outer container of an HTML table.' },
+        { name: '<tr>', desc: 'Table Row — groups cells horizontally into one row.' },
+        { name: '<th>', desc: 'Table Header cell — bold and centered by default for column/row titles.' },
+        { name: '<td>', desc: 'Table Data cell — standard content cell inside a row.' }
+      ],
+      codeExample: '<table>\n  <tr>\n    <th>No Student</th>\n    <th>Student Name</th>\n    <th>Student Deg</th>\n  </tr>\n  <tr>\n    <td>1</td>\n    <td>Ahmad</td>\n    <td>85</td>\n  </tr>\n  <tr>\n    <td>2</td>\n    <td>Michael</td>\n    <td>86</td>\n  </tr>\n</table>',
+      practical: 'Used for student grades, schedules, financial reports, and product comparison matrices.',
+      expectedOutput: 'A 3-column × 3-row table with headers "No Student", "Student Name", "Student Deg" and rows for Ahmad (85) and Michael (86).',
+      mistakes: [
+        'Using <td> for column headings instead of <th>.',
+        'Forgetting to wrap <th> or <td> inside a <tr> row tag.'
+      ],
+      keywords: ['<table>', '<tr>', '<th>', '<td>', 'table header', 'table data'],
+      summary: 'table wraps all -> tr is a row -> th is a header cell -> td is a data cell.',
+      exercise: 'Use the interactive table builder below to add a 3rd student row and inspect the generated HTML.',
+      interactiveType: 'table',
+      miniQuizIds: ['mcq-7', 'mcq-8']
+    },
+    {
+      id: 'l5', num: 5,
+      titleEn: 'Ordered Lists (ol, li) vs. Unordered Lists (ul)',
+      titleAr: 'القوائم المرتبة (ol) وغير المرتبة (ul)',
+      origQuestion: '5. Write code HTML for the following ordered HTML list: 1. Coffee, 2. Tea, 3. Milk',
+      shortAnswer: 'Wrap list items in <ol>...</ol> for a numbered (ordered) list, and wrap each individual item in <li>...</li>.',
+      arExplain: 'لو عايز قائمة مرقمة (1، 2، 3) زي خطوات أو ترتيب، استخدم <ol> (Ordered List)، وكل عنصر جواها بيتكتب بين <li> و </li> (List Item). أما لو عايز قائمة بنقط عادية بدون أرقام، بتستخدم <ul> (Unordered List) وبردو جواها <li>.',
+      tags: [
+        { name: '<ol>', desc: 'Ordered List — renders numbered items (1, 2, 3...) automatically.' },
+        { name: '<ul>', desc: 'Unordered List — renders bulleted items when order does not matter.' },
+        { name: '<li>', desc: 'List Item — defines each single item inside <ol> or <ul>.' }
+      ],
+      codeExample: '<ol>\n  <li>Coffee</li>\n  <li>Tea</li>\n  <li>Milk</li>\n</ol>',
+      practical: 'Use <ol> for recipes, rankings, or exam steps; use <ul> for navigation menus or feature lists.',
+      expectedOutput: 'A numbered vertical list: 1. Coffee, 2. Tea, 3. Milk.',
+      mistakes: [
+        'Typing "1. Coffee" manually inside <li> (causes double numbering like "1. 1. Coffee").',
+        'Using <ul> instead of <ol> when the exam asks for an ordered list.'
+      ],
+      keywords: ['<ol>', '<li>', '<ul>', 'ordered list', 'unordered list'],
+      summary: '<ol> = numbered (Ordered), <ul> = bullets (Unordered), <li> = each list item.',
+      exercise: 'Change <ol> to <ul> in the Playground to observe the visual difference immediately.',
+      interactiveType: 'preview',
+      miniQuizIds: ['mcq-9', 'mcq-10']
+    },
+    {
+      id: 'l6', num: 6,
+      titleEn: 'HTML Buttons (<button>)',
+      titleAr: 'إنشاء الأزرار باستخدام وسم button',
+      origQuestion: '6. Write code HTML for the following HTML Button (Click Me)',
+      shortAnswer: '<button>Click Me</button> creates a standard clickable button whose label sits between the opening and closing tags.',
+      arExplain: 'علشان تعمل زرار في HTML بتستخدم وسم <button> وتكتب النص اللي هيظهر على الزرار بين الفتحة والقفلة زي <button>Click Me</button>. الزرار لوحده بيكون قابل للضغط، ولو عايزه ينفذ حاجة بنربطه بـ JavaScript أو نحطه جوه Form.',
+      tags: [
+        { name: '<button>', desc: 'Creates a clickable button element that can contain text or icons.' },
+        { name: 'type', desc: 'Optional attribute: button (plain action), submit (submits form), or reset.' }
+      ],
+      codeExample: '<button>Click Me</button>',
+      practical: 'Used for actions such as opening menus, submitting forms, toggling themes, or triggering JavaScript.',
+      expectedOutput: 'A clickable button labeled "Click Me".',
+      mistakes: [
+        'Forgetting the closing </button> tag.',
+        'Confusing <button>Click Me</button> with <input type="button" value="Click Me"> (which uses value instead of inner text).'
+      ],
+      keywords: ['<button>', '</button>', 'Click Me'],
+      summary: '<button>Text</button> renders a clickable button; text goes between the tags.',
+      exercise: 'Edit the button label live below to see both the HTML code and rendered button update.',
+      interactiveType: 'button',
+      miniQuizIds: ['mcq-11', 'mcq-12']
+    },
+    {
+      id: 'l7', num: 7,
+      titleEn: 'onclick Attribute & JavaScript Events',
+      titleAr: 'خاصية onclick وأحداث جافاسكريبت',
+      origQuestion: '7. Write code HTML for button uses the onclick attribute to run JavaScript. When you click the button, it shows an alert message.',
+      shortAnswer: '<button onclick="alert(\'Hello!\')">Click Me</button> — onclick is an event attribute that executes JavaScript when the user clicks the element.',
+      arExplain: 'خاصية onclick بتربط الزرار بحدث الضغط (Click Event)، فأول ما المستخدم يدوس على الزرار، المتصفح بينفذ كود JavaScript المكتوب جواها. في المثال ده الدالة alert(\'Hello!\') بتطلع رسالة تنبيه للمستخدم. خلي بالك من علامات التنصيص: لو بره دبل كوتس "..."، جوه الـ alert نكتب سنجل كوتس \'...\' علشان الكود ميتكسرش.',
+      tags: [
+        { name: 'onclick', desc: 'HTML event handler attribute triggered whenever the element is clicked.' },
+        { name: 'alert()', desc: 'Built-in JavaScript function that displays a dialog message to the user.' }
+      ],
+      codeExample: '<button onclick="alert(\'Hello!\')">Click Me</button>',
+      practical: 'Other examples: onclick="document.body.style.backgroundColor=\'beige\'" or calling a custom function onclick="sayHi()".',
+      expectedOutput: 'Clicking "Click Me" triggers the JavaScript onclick handler and shows the "Hello!" alert message.',
+      mistakes: [
+        'Using double quotes inside double quotes: onclick="alert("Hello!")" breaks the HTML attribute.',
+        'Misspelling onclick (e.g., onClick is JSX/React, while standard HTML uses lowercase onclick).'
+      ],
+      keywords: ['onclick', 'alert', 'JavaScript', 'event', '<button>'],
+      summary: 'onclick runs JS on click. Mix quotes properly: onclick="alert(\'Hello!\')".',
+      exercise: 'Click the live demo button below to test an onclick event safely without leaving the page.',
+      interactiveType: 'onclick',
+      miniQuizIds: ['mcq-13', 'mcq-14']
+    },
+    {
+      id: 'l8', num: 8,
+      titleEn: 'HTML Forms (form, label, input, submit)',
+      titleAr: 'النماذج في HTML (Forms)',
+      origQuestion: '8. Write code HTML for create Form include two text box and submit Botton, as the following (First name: John, Last name: Doe, Submit)',
+      shortAnswer: 'Wrap fields in <form action="/action_page.php">, pair each <label for="..."> with an <input type="text" id="..." name="..." value="...">, and finish with <input type="submit" value="Submit">.',
+      arExplain: 'الـ <form> هو الحاوية اللي بتجمع بيانات المستخدم وتبعتها للسيرفر (عبر خاصية action). لكل خانة بنكتب <label for="fname"> علشان نربط التسمية بالخانة اللي واخدة نفس الـ id="fname"، وخاصية name هي الاسم اللي بيتبعت بيه البيانات، و value هي القيمة الافتراضية جوه الخانة (زي John و Doe)، وفي الآخر زرار <input type="submit"> لإرسال النموذج.',
+      tags: [
+        { name: '<form>', desc: 'Container for user input controls; action defines where form data is sent.' },
+        { name: '<label for="...">', desc: 'Accessible caption linked to an input whose id matches the for attribute.' },
+        { name: '<input>', desc: 'Void element creating text boxes, buttons, checkboxes, and more via type.' },
+        { name: 'id / name / value', desc: 'id links with label; name is the submission key; value sets default text or button label.' }
+      ],
+      codeExample: '<form action="/action_page.php">\n  <label for="fname">First name:</label><br>\n  <input type="text" id="fname" name="fname" value="John"><br>\n  <label for="lname">Last name:</label><br>\n  <input type="text" id="lname" name="lname" value="Doe"><br><br>\n  <input type="submit" value="Submit">\n</form>',
+      practical: 'Forms power login screens, registration pages, search bars, and contact pages.',
+      expectedOutput: 'Two labeled text boxes pre-filled with "John" and "Doe" stacked vertically above a "Submit" button.',
+      mistakes: [
+        'Mismatching <label for="fname"> and <input id="fname">.',
+        'Omitting the name attribute (without name, an input value is not sent on submit).'
+      ],
+      keywords: ['<form>', 'action', '<label>', 'for', '<input>', 'type="text"', 'id', 'name', 'value', 'type="submit"'],
+      summary: 'form wraps controls; label for=id; input needs type, id, name, value; submit sends the form.',
+      exercise: 'Customize the First Name, Last Name, and Button label in the interactive Form Builder below.',
+      interactiveType: 'form',
+      miniQuizIds: ['mcq-15', 'mcq-16']
+    },
+    {
+      id: 'l9', num: 9,
+      titleEn: 'Five HTML Form Input Types',
+      titleAr: 'أنواع حقول الإدخال الخمسة في النماذج',
+      origQuestion: '9. List 5 type elements of Form? example and Description.',
+      shortAnswer: '1) text (single-line text field), 2) radio (select ONE of many choices), 3) checkbox (select ZERO or MORE choices), 4) submit (submits the form), 5) button (general clickable button).',
+      arExplain: 'في المنهج عندنا 5 أنواع أساسية للـ <input>: الـ text لكتابة سطر نصي واحد، الـ radio لاختيار إجابة واحدة فقط من عدة خيارات (لازم ياخدوا نفس الـ name)، الـ checkbox لاختيار صفر أو أكثر من خيار، الـ submit زرار إرسال النموذج، والـ button زرار عادي قابل للضغط لتنفيذ أكشن بجافاسكريبت.',
+      tags: [
+        { name: 'type="text"', desc: 'Displays a single-line text input field (names, search queries).' },
+        { name: 'type="radio"', desc: 'Displays a radio button for selecting ONE of many choices (share same name).' },
+        { name: 'type="checkbox"', desc: 'Displays a checkbox for selecting ZERO or MORE of many choices.' },
+        { name: 'type="submit"', desc: 'Displays a submit button that sends the form data.' },
+        { name: 'type="button"', desc: 'Displays a plain clickable button that does not submit by default.' }
+      ],
+      codeExample: '<input type="text" placeholder="Enter name">\n<input type="radio" name="track" value="fe"> Frontend\n<input type="radio" name="track" value="be"> Backend\n<input type="checkbox" value="html"> HTML\n<input type="checkbox" value="css"> CSS\n<input type="submit" value="Submit">\n<input type="button" value="Click Me">',
+      practical: 'Key exam contrast: radio = choose ONE (mutually exclusive); checkbox = choose ZERO or MORE. submit = sends form; button = custom JS action.',
+      expectedOutput: 'A text field, mutually exclusive radio buttons, multi-select checkboxes, a submit button, and a clickable button.',
+      mistakes: [
+        'Confusing radio (one choice) with checkbox (zero or more choices).',
+        'Giving radio buttons different name attributes (then users can select multiple!).'
+      ],
+      keywords: ['text', 'radio', 'checkbox', 'submit', 'button', 'one of many', 'zero or more'],
+      summary: 'text (1 line), radio (1 of many), checkbox (0 or more), submit (send form), button (clickable).',
+      exercise: 'Interact with all 5 live input types in the interactive showcase below.',
+      interactiveType: 'inputs',
+      miniQuizIds: ['mcq-17', 'mcq-18']
+    },
+    {
+      id: 'l10', num: 10,
+      titleEn: 'HTML Video (<video>, controls, <source>)',
+      titleAr: 'إضافة الفيديو في HTML',
+      origQuestion: '10. Write code HTML for display video mov_HITU.mp4 with controls attribute adds video controls, like play, pause, volume and full screen.',
+      shortAnswer: '<video width="400" controls><source src="mov_HITU.mp4" type="video/mp4"></video> — controls enables play, pause, volume, and fullscreen.',
+      arExplain: 'لعرض فيديو في صفحة الويب بنستخدم وسم <video> وبنديله العرض width="400" وكلمة controls علشان يظهر للمستخدم أزرار التشغيل والإيقاف والصوت وملء الشاشة. وجواه بنحط <source> اللي بيحدد ملف الفيديو src="mov_HITU.mp4" ونوعه type="video/mp4".',
+      tags: [
+        { name: '<video>', desc: 'Embeds a media player for video playback.' },
+        { name: 'width', desc: 'Sets the display width of the video player in pixels (e.g., 400).' },
+        { name: 'controls', desc: 'Boolean attribute that displays play, pause, timeline, volume, and fullscreen controls.' },
+        { name: '<source>', desc: 'Specifies the media file path (src) and MIME type (type="video/mp4").' }
+      ],
+      codeExample: '<video width="400" controls>\n  <source src="mov_HITU.mp4" type="video/mp4">\n</video>',
+      practical: 'Note: In a static website without the external mov_HITU.mp4 file in the same folder, the player UI still renders with controls, and works immediately once mov_HITU.mp4 is placed beside index.html.',
+      expectedOutput: 'A 400px-wide video player with built-in play, pause, volume, and fullscreen controls.',
+      mistakes: [
+        'Forgetting the controls attribute (leaving the user with no play/pause buttons).',
+        'Writing type="mp4" instead of the proper MIME type "video/mp4".'
+      ],
+      keywords: ['<video>', 'width="400"', 'controls', '<source>', 'mov_HITU.mp4', 'video/mp4'],
+      summary: '<video width="400" controls> + <source src="mov_HITU.mp4" type="video/mp4"> + </video>.',
+      exercise: 'Inspect the live <video controls> element demonstration below.',
+      interactiveType: 'video',
+      miniQuizIds: ['mcq-19', 'mcq-20']
+    },
+    {
+      id: 'l11', num: 11,
+      titleEn: 'HTML Audio (<audio>, controls, <source>)',
+      titleAr: 'إضافة الصوت في HTML',
+      origQuestion: '11. Write code HTML for play an audio horse.mp3 file on a web page',
+      shortAnswer: '<audio controls><source src="horse.mp3" type="audio/mpeg"></audio> — plays MP3 audio with browser playback controls.',
+      arExplain: 'لإضافة ملف صوتي بنستخدم وسم <audio controls> وجواه <source src="horse.mp3" type="audio/mpeg">. خد بالك إن نوع ملف الـ MP3 في الـ MIME type هو audio/mpeg مش audio/mp3! والفرق بين <audio> و <video> إن <audio> بيعرض شريط صوتي بس بدون شاشة فيديو أو width.',
+      tags: [
+        { name: '<audio>', desc: 'Embeds a sound player for audio files (no visual video frame).' },
+        { name: 'controls', desc: 'Displays play/pause, timeline scrubber, and volume controls.' },
+        { name: 'type="audio/mpeg"', desc: 'Official MIME type for .mp3 audio files.' }
+      ],
+      codeExample: '<audio controls>\n  <source src="horse.mp3" type="audio/mpeg">\n</audio>',
+      practical: 'Audio vs. Video: <audio> plays sound only (no width/height/fullscreen); <video> plays visual frames + audio and supports width/fullscreen.',
+      expectedOutput: 'A compact audio player bar with play/pause, progress slider, and mute/volume controls.',
+      mistakes: [
+        'Writing type="audio/mp3" instead of type="audio/mpeg".',
+        'Omitting controls (making the audio player invisible on the page).'
+      ],
+      keywords: ['<audio>', 'controls', '<source>', 'horse.mp3', 'audio/mpeg'],
+      summary: '<audio controls> + <source src="horse.mp3" type="audio/mpeg"> + </audio>.',
+      exercise: 'Test the live synthesized audio player demonstration below (works offline with zero external files).',
+      interactiveType: 'audio',
+      miniQuizIds: ['mcq-21', 'mcq-22']
+    },
+    {
+      id: 'l12', num: 12,
+      titleEn: 'Six Main Web APIs & Their Uses',
+      titleAr: 'أهم 6 واجهات برمجية للويب (Web APIs)',
+      origQuestion: '12. Write list 6 main Web APIs , and it\'s uses?',
+      shortAnswer: '1. Geolocation API (user latitude/longitude), 2. Drag and Drop API (browser drag-and-drop), 3. Web Storage API (key/value pairs better than cookies), 4. Web Workers API (background JS without freezing UI), 5. Server-Sent Events API (automatic updates from server), 6. Canvas API (draw graphics on the fly via JS).',
+      arExplain: 'الـ Web APIs هي أدوات جاهزة جوه المتصفح بتخلي صفحتك تفاعلية وقوية: (1) Geolocation لتحديد موقع المستخدم بخط الطول والعرض، (2) Drag and Drop لسحب وإفلات العناصر، (3) Web Storage لتخزين البيانات كـ key/value أسهل وأكبر من الكوكيز، (4) Web Workers لتشغيل جافاسكريبت في الخلفية من غير ما الصفحة تهنج، (5) Server-Sent Events لاستقبال تحديثات تلقائية من السيرفر، (6) Canvas لرسم أشكال وجرافيكس لحظياً بالجافاسكريبت.',
+      tags: [
+        { name: 'Geolocation API', desc: 'Accesses current user location (latitude & longitude). Requires HTTPS and user permission.' },
+        { name: 'Drag and Drop API', desc: 'Enables dragging elements and dropping them into target zones in the browser.' },
+        { name: 'Web Storage API', desc: 'Stores key/value pairs locally (localStorage / sessionStorage) more intuitively than cookies.' },
+        { name: 'Web Workers API', desc: 'Runs JavaScript in a background thread without blocking clicks or UI performance.' },
+        { name: 'Server-Sent Events (SSE)', desc: 'Lets a webpage automatically receive real-time push updates from a server (requires a live backend server).' },
+        { name: 'Canvas API', desc: 'Draws 2D/3D graphics, charts, and animations on the fly via JavaScript.' }
+      ],
+      codeExample: '<!-- Canvas API Example -->\n<canvas id="myCanvas" width="220" height="70"></canvas>\n<script>\n  const ctx = document.getElementById("myCanvas").getContext("2d");\n  ctx.fillStyle = "#5C3D2E";\n  ctx.fillRect(10, 10, 180, 45);\n<\/script>',
+      practical: 'Static Site Honesty: Web Storage, Drag & Drop, and Canvas work 100% locally. Geolocation requires explicit browser permission; Web Workers may be restricted on local file:// URLs; Server-Sent Events (EventSource) requires a real live server endpoint and cannot push from a static file.',
+      expectedOutput: 'Canvas draws shapes directly in the browser; Drag & Drop moves elements interactively; Web Storage persists data across reloads.',
+      mistakes: [
+        'Confusing Web Storage (client-side key/value) with Server-Sent Events (server-to-client push).',
+        'Forgetting that Web Workers keep the UI responsive by running JS in the background.'
+      ],
+      keywords: ['Geolocation', 'Drag and Drop', 'Web Storage', 'Web Workers', 'Server-Sent Events', 'Canvas'],
+      summary: 'Remember all 6: Geolocation (location), Drag & Drop, Web Storage (key/value), Web Workers (background JS), SSE (server updates), Canvas (JS graphics).',
+      exercise: 'Test the live Canvas drawing & Drag-and-Drop mini-demos below.',
+      interactiveType: 'webapis',
+      miniQuizIds: ['mcq-23', 'mcq-24']
+    },
+    {
+      id: 'l13', num: 13,
+      titleEn: 'HTML Popover API (popover, popovertarget)',
+      titleAr: 'واجهة Popover API للنوافذ المنبثقة',
+      origQuestion: '13. Write code HTML for Popover API making things that pop up on top of the page, as the following (Show Tip -> Here we can show a helpful tip.)',
+      shortAnswer: '<button popovertarget="tip1">Show Tip</button> paired with <div id="tip1" popover>Here we can show a helpful tip.</div> — opens a top-layer popup with zero JavaScript.',
+      arExplain: 'الـ Popover API ميزة حديثة في HTML بتخليك تعمل نافذة منبثقة (Popup) تظهر فوق الصفحة كلها من غير ما تكتب سطر JavaScript واحد! كل اللي بتعمله إنك تدي الـ <div> خاصية popover و id="tip1"، وتدي الزرار خاصية popovertarget="tip1" بنفس الاسم، والمتصفح هيتولى فتحها وقفلها تلقائياً لما تضغط بره أو تدوس Esc.',
+      tags: [
+        { name: 'popover', desc: 'HTML attribute that turns an element into a hidden top-layer popup managed by the browser.' },
+        { name: 'popovertarget="id"', desc: 'Button attribute linking the button to the target popover element ID.' },
+        { name: 'id="tip1"', desc: 'Unique identifier matching the button\'s popovertarget value.' }
+      ],
+      codeExample: '<button popovertarget="tip1">Show Tip</button>\n<div id="tip1" popover>\n  Here we can show a helpful tip.\n</div>',
+      practical: 'The browser automatically promotes the popover to the top layer (above all z-index stacks) and supports light-dismiss (clicking outside or pressing Escape).',
+      expectedOutput: 'Clicking "Show Tip" toggles a floating box displaying "Here we can show a helpful tip." on top of the page.',
+      mistakes: [
+        'Mismatching popovertarget="tip1" and id="tip1".',
+        'Forgetting the popover attribute on the target <div>.'
+      ],
+      keywords: ['popover', 'popovertarget', 'id="tip1"', 'Show Tip', '<button>', '<div>'],
+      summary: 'Button gets popovertarget="tip1", target div gets id="tip1" popover — zero JS needed!',
+      exercise: 'Click the live "Show Tip" Popover demonstration below.',
+      interactiveType: 'popover',
+      miniQuizIds: ['mcq-25', 'mcq-26']
+    }
+  ],
+
+  mcqs: [
+    { id: 'mcq-1', lessonId: 'l1', q: 'Which of the following correctly sets a red page background using a HEX color value?', opts: ['<body style="background-color: color:#ff0000;">', '<body style="background-color: #ff0000;">', '<body background="#ff0000">', '<body style="color: #ff0000;">'], correct: 1, exp: 'Valid inline CSS uses background-color: #ff0000; directly. Adding "color:" inside background-color (as in the PDF typo) is invalid, and "color:" alone changes text color, not background.' },
+    { id: 'mcq-2', lessonId: 'l1', q: 'Which RGB value produces the exact same pure red color as #ff0000?', opts: ['rgb(0, 255, 0)', 'rgb(0, 0, 255)', 'rgb(255, 0, 0)', 'rgb(255, 255, 0)'], correct: 2, exp: 'In RGB (Red, Green, Blue), 255 for Red and 0 for Green and Blue produces pure red, matching #ff0000.' },
+    { id: 'mcq-3', lessonId: 'l2', q: 'Which HTML element is the container for all visible content such as headings and paragraphs?', opts: ['<head>', '<body>', '<title>', '<meta>'], correct: 1, exp: '<body> holds all visible page content. <head>, <title>, and <meta> contain document metadata not rendered inside the page body.' },
+    { id: 'mcq-4', lessonId: 'l2', q: 'In a basic HTML document, which tag defines the main top-level heading?', opts: ['<p>', '<heading>', '<h1>', '<head>'], correct: 2, exp: '<h1> defines the highest-level heading, whereas <p> defines a paragraph and <head> holds metadata.' },
+    { id: 'mcq-5', lessonId: 'l3', q: 'What is the purpose of the alt attribute in <img src="hitu.jpg" alt="HITU Photo">?', opts: ['Sets the image border width', 'Provides alternative text if the image cannot load and for screen readers', 'Changes the image file format', 'Aligns the image to the left'], correct: 1, exp: 'alt gives accessible descriptive text for screen readers and displays if the image file fails to load.' },
+    { id: 'mcq-6', lessonId: 'l3', q: 'Which statement about the HTML <img> element is TRUE?', opts: ['It requires a closing </img> tag', 'It is a void element with no closing tag', 'It uses href instead of src', 'It can only display .png files'], correct: 1, exp: '<img> is a void (empty) element with no closing tag, and it uses src (not href) to load JPG, PNG, SVG, WebP, etc.' },
+    { id: 'mcq-7', lessonId: 'l4', q: 'Which tag is used to create a table header cell (such as "Student Name")?', opts: ['<td>', '<tr>', '<th>', '<thead>'], correct: 2, exp: '<th> defines a table header cell (bold and centered by default), while <td> is a regular data cell and <tr> is a row.' },
+    { id: 'mcq-8', lessonId: 'l4', q: 'In HTML tables, every <th> or <td> cell must be placed directly inside which element?', opts: ['<tc>', '<tr>', '<col>', '<li>'], correct: 1, exp: '<tr> (Table Row) groups cells into a horizontal row inside <table>.' },
+    { id: 'mcq-9', lessonId: 'l5', q: 'Which pair of tags creates a numbered list (1. Coffee, 2. Tea, 3. Milk)?', opts: ['<ul> and <li>', '<ol> and <li>', '<list> and <item>', '<dl> and <dt>'], correct: 1, exp: '<ol> stands for Ordered List (numbered), and <li> defines each list item. <ul> produces bullet points.' },
+    { id: 'mcq-10', lessonId: 'l5', q: 'What happens if you replace <ol> with <ul> in the Coffee/Tea/Milk list?', opts: ['The list disappears', 'The numbers change into bullet points', 'The items become bold headings', 'The list turns horizontal'], correct: 1, exp: '<ul> (Unordered List) renders bullet points instead of 1, 2, 3 numbering.' },
+    { id: 'mcq-11', lessonId: 'l6', q: 'How do you display the label "Click Me" on a standard <button> element?', opts: ['<button text="Click Me">', '<button>Click Me</button>', '<button alt="Click Me"></button>', '<btn>Click Me</btn>'], correct: 1, exp: 'A <button> displays whatever text or HTML sits between its opening and closing tags.' },
+    { id: 'mcq-12', lessonId: 'l6', q: 'Which HTML tag name is valid for creating a button?', opts: ['<btn>', '<button>', '<click>', '<push>'], correct: 1, exp: '<button> is the standard HTML5 button element (alongside <input type="button">).' },
+    { id: 'mcq-13', lessonId: 'l7', q: 'Which attribute runs JavaScript code when a user clicks a button?', opts: ['onpress', 'onclick', 'onrun', 'jsclick'], correct: 1, exp: 'onclick is the standard HTML event attribute triggered by a click.' },
+    { id: 'mcq-14', lessonId: 'l7', q: 'Which button code uses valid quote nesting to show an alert saying Hello!?', opts: ['<button onclick="alert("Hello!")">Click Me</button>', '<button onclick="alert(\'Hello!\')">Click Me</button>', '<button click="alert(\'Hello!\')">Click Me</button>', '<button onclick="message(\'Hello!\')">Click Me</button>'], correct: 1, exp: 'Outer double quotes with inner single quotes prevent premature attribute termination, and alert() is the built-in JS alert function.' },
+    { id: 'mcq-15', lessonId: 'l8', q: 'How does a <label> element associate itself with a specific <input> field?', opts: ['label.name matches input.value', 'label.for matches input.id', 'label.type matches input.type', 'label.action matches form.action'], correct: 1, exp: 'Setting <label for="fname"> and <input id="fname"> binds them together for clicking and accessibility.' },
+    { id: 'mcq-16', lessonId: 'l8', q: 'Which attribute on <input type="text" id="fname" name="fname" value="John"> pre-fills "John" in the box?', opts: ['id', 'name', 'value', 'for'], correct: 2, exp: 'value sets the initial text inside a text input (and the caption on a submit input).' },
+    { id: 'mcq-17', lessonId: 'l9', q: 'Which input type allows selecting ZERO or MORE options from a set of choices?', opts: ['radio', 'checkbox', 'text', 'submit'], correct: 1, exp: 'checkbox allows zero, one, or multiple selections, whereas radio allows only ONE selection in a group.' },
+    { id: 'mcq-18', lessonId: 'l9', q: 'What is the main difference between <input type="submit"> and <input type="button">?', opts: ['submit sends the form data; button is a plain clickable button', 'button sends the form; submit does nothing', 'submit cannot have a value attribute', 'There is no difference'], correct: 0, exp: 'type="submit" submits the enclosing form to its action URL, while type="button" only runs custom scripts.' },
+    { id: 'mcq-19', lessonId: 'l10', q: 'In <video width="400" controls>, what does the controls attribute add?', opts: ['Auto-downloads the video', 'Play, pause, volume, and fullscreen controls', 'Changes video resolution to 400p', 'Adds subtitles automatically'], correct: 1, exp: 'The controls attribute tells the browser to render built-in play, pause, timeline, volume, and fullscreen controls.' },
+    { id: 'mcq-20', lessonId: 'l10', q: 'Which <source> tag correctly specifies an MP4 video named mov_HITU.mp4?', opts: ['<source href="mov_HITU.mp4" type="mp4">', '<source src="mov_HITU.mp4" type="video/mp4">', '<source file="mov_HITU.mp4" mime="video/mp4">', '<video src="mov_HITU.mp4" type="audio/mpeg">'], correct: 1, exp: '<source> uses src for the file path and type="video/mp4" for the MP4 MIME type.' },
+    { id: 'mcq-21', lessonId: 'l11', q: 'Which MIME type is used inside <source> for an MP3 audio file like horse.mp3?', opts: ['audio/mp3-file', 'video/mp3', 'audio/mpeg', 'sound/mp3'], correct: 2, exp: 'The standard MIME type for MP3 audio in HTML5 is audio/mpeg.' },
+    { id: 'mcq-22', lessonId: 'l11', q: 'How does <audio> differ from <video> in HTML5?', opts: ['<audio> cannot use <source>', '<audio> plays sound only without a visual video frame or fullscreen screen', '<audio> does not support the controls attribute', '<video> cannot play sound'], correct: 1, exp: 'Both support controls and <source>, but <audio> is for sound playback only (no visual viewport).' },
+    { id: 'mcq-23', lessonId: 'l12', q: 'Which Web API runs JavaScript in the background without freezing the webpage UI?', opts: ['Web Storage API', 'Web Workers API', 'Canvas API', 'Geolocation API'], correct: 1, exp: 'Web Workers run JS in a background thread so users can keep clicking and scrolling smoothly.' },
+    { id: 'mcq-24', lessonId: 'l12', q: 'Which Web API allows a webpage to automatically receive updates pushed from a server?', opts: ['Server-Sent Events API', 'Drag and Drop API', 'Web Storage API', 'Canvas API'], correct: 0, exp: 'Server-Sent Events (SSE) allows a browser page to automatically receive updates from a server.' },
+    { id: 'mcq-25', lessonId: 'l13', q: 'Which attribute connects a <button> to a <div id="tip1" popover> element?', opts: ['target="tip1"', 'popovertarget="tip1"', 'for="tip1"', 'onclick="tip1"'], correct: 1, exp: 'popovertarget="tip1" tells the browser which popover element ID the button toggles.' },
+    { id: 'mcq-26', lessonId: 'l13', q: 'What is a key benefit of the native HTML Popover API?', opts: ['It requires jQuery', 'It opens top-layer popups declaratively in HTML without writing JavaScript', 'It only works inside <table>', 'It replaces <form>'], correct: 1, exp: 'With popover and popovertarget, the browser handles opening, top-layer stacking, and light-dismiss automatically with zero JavaScript.' }
+  ],
+
+  essays: [
+    {
+      id: 'es-1', lessonId: 'l1', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write valid HTML code to set the <body> background color using (1) Color Name yellow, (2) RGB red, and (3) HEX red (corrected syntax).',
+      requiredTokens: ['<body', 'background-color', 'yellow', 'rgb(255, 0, 0)', '#ff0000', '</body>'],
+      checklist: ['Uses <body style="background-color: ...">', 'Includes Color Name: yellow', 'Includes RGB: rgb(255, 0, 0)', 'Includes corrected HEX: #ff0000 (without extra color:)'],
+      model: '<body style="background-color: yellow;"></body>\n<body style="background-color: rgb(255, 0, 0);"></body>\n<body style="background-color: #ff0000;"></body>',
+      ar: 'اكتب الثلاث طرق جوه style="background-color: ..." واتأكد إن مثال الـ HEX مكتوب #ff0000 من غير كلمة color: زيادة.'
+    },
+    {
+      id: 'es-2', lessonId: 'l2', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write a complete basic HTML page containing <html>, <body>, <h1> ("My First Heading"), and <p> ("My first paragraph.").',
+      requiredTokens: ['<html>', '<body>', '<h1>', '</h1>', '<p>', '</p>', '</body>', '</html>'],
+      checklist: ['Opens and closes <html>', 'Opens and closes <body>', 'Includes <h1>My First Heading</h1>', 'Includes <p>My first paragraph.</p>'],
+      model: '<html>\n<body>\n<h1>My First Heading</h1>\n<p>My first paragraph.</p>\n</body>\n</html>',
+      ar: 'احرص على فتح وإغلاق كل وسم بالترتيب الصحيح: html ثم body وجواهم h1 و p.'
+    },
+    {
+      id: 'es-3', lessonId: 'l3', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write HTML code to insert the image "hitu.jpg" with both src and alt attributes ("HITU Photo"), and briefly explain each attribute.',
+      requiredTokens: ['<img', 'src=', 'hitu.jpg', 'alt=', 'HITU Photo'],
+      checklist: ['Uses <img ...> without closing tag', 'Sets src="hitu.jpg"', 'Sets alt="HITU Photo"', 'Explains src (path) and alt (fallback/accessibility)'],
+      model: '<img src="hitu.jpg" alt="HITU Photo">\n- src specifies the image file path.\n- alt provides alternative text if the image fails to load.',
+      ar: 'اكتب وسم img من غير قفلة، واشرح إن src لمسار الصورة و alt للنص البديل.'
+    },
+    {
+      id: 'es-4', lessonId: 'l4', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write HTML code for the Student Table (No Student, Student Name, Student Deg) with rows: (1, Ahmad, 85) and (2, Michael, 86).',
+      requiredTokens: ['<table>', '<tr>', '<th>', '<td>', 'Ahmad', 'Michael', '</table>'],
+      checklist: ['Uses <table> and <tr> for 3 rows', 'Uses <th> for the 3 header columns', 'Uses <td> for Ahmad (85) and Michael (86)', 'Closes all tags properly'],
+      model: '<table>\n  <tr><th>No Student</th><th>Student Name</th><th>Student Deg</th></tr>\n  <tr><td>1</td><td>Ahmad</td><td>85</td></tr>\n  <tr><td>2</td><td>Michael</td><td>86</td></tr>\n</table>',
+      ar: 'الصف الأول عناوين باستخدام th، والصفين التاني والتالت بيانات باستخدام td وكل صف جوه tr.'
+    },
+    {
+      id: 'es-5', lessonId: 'l5', style: 'Write & Compare', isCode: true,
+      prompt: 'Write HTML code for the ordered list (Coffee, Tea, Milk) and explain the difference between <ol> and <ul>.',
+      requiredTokens: ['<ol>', '<li>', 'Coffee', 'Tea', 'Milk', '</ol>'],
+      checklist: ['Uses <ol>...</ol>', 'Wraps Coffee, Tea, Milk in <li>', 'Explains <ol> is numbered (ordered)', 'Explains <ul> is bulleted (unordered)'],
+      model: '<ol>\n  <li>Coffee</li>\n  <li>Tea</li>\n  <li>Milk</li>\n</ol>\nDifference: <ol> creates a numbered list; <ul> creates a bulleted list.',
+      ar: 'استخدم ol و li للتلات عناصر، واذكر إن ol مرقمة و ul نقطية.'
+    },
+    {
+      id: 'es-6', lessonId: 'l6', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write HTML code to create a button labeled "Click Me" and explain how <button> works.',
+      requiredTokens: ['<button>', 'Click Me', '</button>'],
+      checklist: ['Opens <button>', 'Places "Click Me" inside', 'Closes </button>', 'Explains clickable button element'],
+      model: '<button>Click Me</button>\nThe <button> element defines a clickable button displaying the text inside its tags.',
+      ar: 'اكتب <button>Click Me</button> ووضح إنه ينشئ زراً قابلاً للضغط.'
+    },
+    {
+      id: 'es-7', lessonId: 'l7', style: 'JavaScript Events', isCode: true,
+      prompt: 'Write HTML code for a button that uses onclick to display an alert("Hello!") message, and explain onclick and alert().',
+      requiredTokens: ['<button', 'onclick=', 'alert(', 'Hello!', '</button>'],
+      checklist: ['Uses onclick attribute on <button>', 'Calls alert(\'Hello!\') with valid quotes', 'Explains onclick triggers JS on click', 'Explains alert() displays a popup message'],
+      model: '<button onclick="alert(\'Hello!\')">Click Me</button>\nonclick runs JavaScript when clicked; alert() displays a dialog message.',
+      ar: 'اكتب onclick="alert(\'Hello!\')" مع مراعاة علامات التنصيص واشرح دور onclick و alert.'
+    },
+    {
+      id: 'es-8', lessonId: 'l8', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write the HTML Form with First name ("John"), Last name ("Doe"), labels, and a Submit button.',
+      requiredTokens: ['<form', '<label', 'for=', '<input', 'type="text"', 'value="John"', 'value="Doe"', 'type="submit"', '</form>'],
+      checklist: ['Uses <form action="/action_page.php">', 'Links <label for="fname/lname"> to input id', 'Sets value="John" and value="Doe"', 'Includes <input type="submit" value="Submit">'],
+      model: '<form action="/action_page.php">\n  <label for="fname">First name:</label><br>\n  <input type="text" id="fname" name="fname" value="John"><br>\n  <label for="lname">Last name:</label><br>\n  <input type="text" id="lname" name="lname" value="Doe"><br><br>\n  <input type="submit" value="Submit">\n</form>',
+      ar: 'اربط كل label بالـ input عن طريق for و id، وحط القيم الافتراضية John و Doe وزرار submit.'
+    },
+    {
+      id: 'es-9', lessonId: 'l9', style: 'List & Describe', isCode: false,
+      prompt: 'List the 5 HTML Form input types from the syllabus with their HTML syntax and exact description.',
+      requiredTokens: ['text', 'radio', 'checkbox', 'submit', 'button'],
+      checklist: ['<input type="text"> — single-line text field', '<input type="radio"> — select one of many', '<input type="checkbox"> — select zero or more', '<input type="submit"> & <input type="button"> described'],
+      model: '1. <input type="text"> — Displays a single-line text input field.\n2. <input type="radio"> — Displays a radio button (one of many choices).\n3. <input type="checkbox"> — Displays a checkbox (zero or more choices).\n4. <input type="submit"> — Displays a submit button.\n5. <input type="button"> — Displays a clickable button.',
+      ar: 'اذكر الأنواع الخمسة بالترتيب وفرق بوضوح بين radio (اختيار واحد) و checkbox (صفر أو أكثر).'
+    },
+    {
+      id: 'es-10', lessonId: 'l10', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write HTML code to display mov_HITU.mp4 with width="400" and playback controls.',
+      requiredTokens: ['<video', 'width="400"', 'controls', '<source', 'mov_HITU.mp4', 'video/mp4', '</video>'],
+      checklist: ['Uses <video width="400" controls>', 'Includes <source src="mov_HITU.mp4" type="video/mp4">', 'Closes </video>', 'Mentions controls adds play, pause, volume, fullscreen'],
+      model: '<video width="400" controls>\n  <source src="mov_HITU.mp4" type="video/mp4">\n</video>',
+      ar: 'اكتب وسم video بالعرض 400 وخاصية controls وجواه source بنوع video/mp4.'
+    },
+    {
+      id: 'es-11', lessonId: 'l11', style: 'Write & Compare', isCode: true,
+      prompt: 'Write HTML code to play horse.mp3 and explain the difference between <audio> and <video>.',
+      requiredTokens: ['<audio', 'controls', '<source', 'horse.mp3', 'audio/mpeg', '</audio>'],
+      checklist: ['Uses <audio controls>', 'Uses <source src="horse.mp3" type="audio/mpeg">', 'Closes </audio>', 'Explains <audio> plays sound only vs <video> visual+sound'],
+      model: '<audio controls>\n  <source src="horse.mp3" type="audio/mpeg">\n</audio>\nDifference: <audio> renders a sound-only player, while <video> renders visual frames and supports width/fullscreen.',
+      ar: 'تأكد من كتابة type="audio/mpeg" واشرح الفرق بين audio و video.'
+    },
+    {
+      id: 'es-12', lessonId: 'l12', style: 'Explain Web APIs', isCode: false,
+      prompt: 'List the 6 main Web APIs from the syllabus and explain the use of each one.',
+      requiredTokens: ['geolocation', 'drag and drop', 'web storage', 'web workers', 'server-sent events', 'canvas'],
+      checklist: ['Geolocation API (latitude & longitude)', 'Drag and Drop API & Web Storage API (key/value)', 'Web Workers API (background JS)', 'Server-Sent Events API & Canvas API (JS graphics)'],
+      model: '1. Geolocation API: access user location (latitude/longitude).\n2. Drag and Drop API: drag-and-drop features in browsers.\n3. Web Storage API: store key/value pairs more intuitively than cookies.\n4. Web Workers API: run JS in the background without hurting page performance.\n5. Server-Sent Events API: automatically get updates from a server.\n6. Canvas API: draw graphics on the fly via JavaScript.',
+      ar: 'اذكر الـ 6 APIs كاملة مع وظيفة كل واحدة باختصار ووضوح.'
+    },
+    {
+      id: 'es-13', lessonId: 'l13', style: 'Write HTML Code', isCode: true,
+      prompt: 'Write HTML code using the Popover API for a "Show Tip" button that opens a tip box ("Here we can show a helpful tip.").',
+      requiredTokens: ['<button', 'popovertarget="tip1"', 'Show Tip', '<div', 'id="tip1"', 'popover', '</div>'],
+      checklist: ['Button has popovertarget="tip1"', 'Div has matching id="tip1"', 'Div includes the popover attribute', 'Contains "Here we can show a helpful tip."'],
+      model: '<button popovertarget="tip1">Show Tip</button>\n<div id="tip1" popover>\n  Here we can show a helpful tip.\n</div>',
+      ar: 'اربط الزرار بالـ div عن طريق popovertarget="tip1" و id="tip1" ولا تنسَ كلمة popover.'
+    }
+  ],
+
+  flashcards: [
+    { id: 'fc-1', lessonId: 'l1', front: 'background-color (3 formats)', backEn: 'Color Name (yellow), RGB (rgb(255,0,0)), HEX (#ff0000).', backAr: 'تغيير لون الخلفية بالاسم أو RGB أو كود HEX.', ex: '<body style="background-color: #ff0000;">' },
+    { id: 'fc-2', lessonId: 'l2', front: '<html> & <body>', backEn: '<html> is the root element; <body> contains all visible page elements.', backAr: 'html هو جذر الصفحة، و body يحتوي على المحتوى المرئي.', ex: '<html><body><h1>Hi</h1></body></html>' },
+    { id: 'fc-3', lessonId: 'l2', front: '<h1> vs <p>', backEn: '<h1> defines the main heading; <p> defines a paragraph of text.', backAr: 'h1 للعنوان الرئيسي الكبير و p للفقرة النصية.', ex: '<h1>Title</h1><p>Text</p>' },
+    { id: 'fc-4', lessonId: 'l3', front: '<img src="..." alt="...">', backEn: 'Void element to embed an image. src = file path; alt = fallback & accessible text.', backAr: 'وسم مفرد لإضافة صورة: src للمسار و alt للنص البديل.', ex: '<img src="hitu.jpg" alt="HITU Photo">' },
+    { id: 'fc-5', lessonId: 'l4', front: '<table>, <tr>, <th>, <td>', backEn: 'table = container, tr = row, th = header cell (bold), td = data cell.', backAr: 'الجدول يتكون من صفوف tr وبداخلها عناوين th أو بيانات td.', ex: '<tr><th>Name</th><td>Ahmad</td></tr>' },
+    { id: 'fc-6', lessonId: 'l5', front: '<ol> vs <ul>', backEn: '<ol> = Ordered (numbered) list; <ul> = Unordered (bulleted) list; both use <li>.', backAr: 'ol قائمة مرقمة و ul قائمة نقطية وكلاهما يستخدم li.', ex: '<ol><li>Coffee</li></ol>' },
+    { id: 'fc-7', lessonId: 'l6', front: '<button>', backEn: 'Creates a clickable button with its visible label between opening and closing tags.', backAr: 'ينشئ زراً قابلاً للضغط بالنص المكتوب بداخله.', ex: '<button>Click Me</button>' },
+    { id: 'fc-8', lessonId: 'l7', front: 'onclick Attribute', backEn: 'HTML event attribute that executes JavaScript when the element is clicked.', backAr: 'خاصية تشغل كود جافاسكريبت لحظة الضغط على العنصر.', ex: '<button onclick="alert(\'Hello!\')">Click Me</button>' },
+    { id: 'fc-9', lessonId: 'l8', front: '<label for="..."> & id', backEn: 'Links a text label to an input field sharing the same id for accessibility.', backAr: 'يربط التسمية بحقل الإدخال الذي يحمل نفس الـ id.', ex: '<label for="fname">First name:</label><input id="fname">' },
+    { id: 'fc-10', lessonId: 'l9', front: '<input type="text">', backEn: 'Displays a single-line text input field.', backAr: 'حقل لإدخال سطر نصي واحد.', ex: '<input type="text" name="fname" value="John">' },
+    { id: 'fc-11', lessonId: 'l9', front: '<input type="radio">', backEn: 'Displays a radio button for selecting ONE of many choices.', backAr: 'زر اختيار واحد فقط من بين عدة خيارات.', ex: '<input type="radio" name="g" value="1">' },
+    { id: 'fc-12', lessonId: 'l9', front: '<input type="checkbox">', backEn: 'Displays a checkbox for selecting ZERO or MORE of many choices.', backAr: 'مربع اختيار يسمح باختيار صفر أو أكثر.', ex: '<input type="checkbox" value="html">' },
+    { id: 'fc-13', lessonId: 'l9', front: 'submit vs button input', backEn: 'type="submit" sends form data; type="button" is a plain clickable button.', backAr: 'submit يرسل النموذج، بينما button زر عادي.', ex: '<input type="submit" value="Submit">' },
+    { id: 'fc-14', lessonId: 'l10', front: '<video controls>', backEn: 'Embeds video with play, pause, volume, and fullscreen controls using <source>.', backAr: 'يعرض فيديو مع أزرار التحكم باستخدام controls و source.', ex: '<video width="400" controls><source src="mov_HITU.mp4" type="video/mp4"></video>' },
+    { id: 'fc-15', lessonId: 'l11', front: '<audio controls>', backEn: 'Plays audio files (MP3 uses MIME type audio/mpeg) with playback controls.', backAr: 'يشغل ملفات الصوت ونوع الـ MP3 هو audio/mpeg.', ex: '<audio controls><source src="horse.mp3" type="audio/mpeg"></audio>' },
+    { id: 'fc-16', lessonId: 'l12', front: 'Geolocation & Drag and Drop APIs', backEn: 'Geolocation gets user latitude/longitude; Drag and Drop enables dragging elements.', backAr: 'Geolocation لتحديد الموقع، و Drag & Drop للسحب والإفلات.', ex: 'navigator.geolocation.getCurrentPosition(...)' },
+    { id: 'fc-17', lessonId: 'l12', front: 'Web Storage & Web Workers APIs', backEn: 'Web Storage saves key/value pairs locally; Web Workers run JS in the background.', backAr: 'Web Storage للتخزين المحلي، و Web Workers للتشغيل في الخلفية.', ex: 'localStorage.setItem("key", "val")' },
+    { id: 'fc-18', lessonId: 'l12', front: 'Server-Sent Events (SSE) API', backEn: 'Allows a webpage to automatically receive updates pushed from a server.', backAr: 'يسمح للصفحة باستقبال تحديثات تلقائية من السيرفر.', ex: 'new EventSource("/updates")' },
+    { id: 'fc-19', lessonId: 'l12', front: 'Canvas API', backEn: 'Lets you draw 2D/3D graphics on the fly via JavaScript.', backAr: 'يسمح برسم الجرافيكس والأشكال لحظياً عبر جافاسكريبت.', ex: 'ctx.fillRect(10, 10, 100, 50)' },
+    { id: 'fc-20', lessonId: 'l13', front: 'Popover API (popover & popovertarget)', backEn: 'Opens a top-layer popup when clicking a button whose popovertarget matches the div id.', backAr: 'ينشئ نافذة منبثقة فوق الصفحة بدون جافاسكريبت.', ex: '<button popovertarget="tip1">Show Tip</button><div id="tip1" popover>Tip</div>' }
+  ],
+
+  games: {
+    detective: [
+      { desc: 'Defines a bold header cell inside an HTML table row.', opts: ['<td>', '<th>', '<tr>', '<head>'], ans: 1, exp: '<th> is Table Header; <td> is Table Data.' },
+      { desc: 'Creates a numbered (ordered) list of items like 1. Coffee, 2. Tea.', opts: ['<ul>', '<ol>', '<li>', '<dl>'], ans: 1, exp: '<ol> stands for Ordered List.' },
+      { desc: 'Void element that embeds an image using src and alt attributes.', opts: ['<image>', '<img>', '<pic>', '<media>'], ans: 1, exp: '<img> is the standard HTML image element.' },
+      { desc: 'Embeds a sound player for horse.mp3 using type="audio/mpeg".', opts: ['<sound>', '<mp3>', '<audio>', '<video>'], ans: 2, exp: '<audio controls> plays audio files.' },
+      { desc: 'Attribute on a <button> that runs JavaScript when clicked.', opts: ['onpress', 'onclick', 'action', 'popover'], ans: 1, exp: 'onclick triggers JS code on click.' },
+      { desc: 'Attribute that links a button directly to a popover <div> by ID.', opts: ['for', 'src', 'popovertarget', 'target'], ans: 2, exp: 'popovertarget matches the id of the popover element.' }
+    ],
+    complete: [
+      { prompt: 'Set page background to HEX red (valid CSS):', before: '<body style="', after: ': #ff0000;"></body>', answer: 'background-color', exp: 'Use background-color (never background-color: color:).' },
+      { prompt: 'Add the alternative text attribute to the HITU image:', before: '<img src="hitu.jpg" ', after: '="HITU Photo">', answer: 'alt', exp: 'alt provides fallback text and accessibility.' },
+      { prompt: 'Complete the MIME type for horse.mp3:', before: '<source src="horse.mp3" type="', after: '">', answer: 'audio/mpeg', exp: 'MP3 files use the MIME type audio/mpeg.' },
+      { prompt: 'Add the attribute that enables play/pause/volume on video:', before: '<video width="400" ', after: '>', answer: 'controls', exp: 'controls adds play, pause, volume, and fullscreen buttons.' },
+      { prompt: 'Link the button to <div id="tip1" popover>:', before: '<button ', after: '="tip1">Show Tip</button>', answer: 'popovertarget', exp: 'popovertarget connects a button to a popover element ID.' }
+    ],
+    findError: [
+      { badCode: '< body style="background-color: color:#ff0000;"></body>', opts: ['Remove space in "< body" and remove extra "color:"', 'Change #ff0000 to yellow', 'Replace style with class', 'Remove semicolon'], ans: 0, exp: 'Valid HTML/CSS is <body style="background-color: #ff0000;"></body>.' },
+      { badCode: '<img href="hitu.jpg" alt="HITU Photo"></img>', opts: ['Change alt to title', 'Use src instead of href and remove closing </img>', 'Add controls attribute', 'Wrap inside <ol>'], ans: 1, exp: '<img> uses src (not href) and is a void element with no closing tag.' },
+      { badCode: '<button onclick="alert("Hello!")">Click Me</button>', opts: ['Change button to input', 'Use single quotes inside double quotes: onclick="alert(\'Hello!\')"', 'Remove onclick', 'Add closing </alert>'], ans: 1, exp: 'Double quotes inside double quotes terminate the attribute early.' },
+      { badCode: '<audio controls><source src="horse.mp3" type="video/mp4"></audio>', opts: ['Change type to audio/mpeg', 'Change audio to img', 'Remove controls', 'Add width="400"'], ans: 0, exp: 'MP3 audio files require type="audio/mpeg".' },
+      { badCode: '<button popovertarget="tip1">Show Tip</button>\n<div id="tip2" popover>Tip</div>', opts: ['Change div to span', 'Match the div id to "tip1"', 'Remove popover attribute', 'Add onclick'], ans: 1, exp: 'popovertarget="tip1" must match id="tip1" exactly.' }
+    ],
+    match: [
+      { id: 'm1', term: 'Geolocation API', def: 'Accesses user current latitude and longitude' },
+      { id: 'm2', term: 'Web Storage API', def: 'Stores key/value pairs locally in the browser' },
+      { id: 'm3', term: 'Web Workers API', def: 'Runs JavaScript in the background without freezing UI' },
+      { id: 'm4', term: 'Server-Sent Events', def: 'Automatically receives live updates from a server' },
+      { id: 'm5', term: 'Canvas API', def: 'Draws 2D/3D graphics on the fly via JavaScript' },
+      { id: 'm6', term: 'Popover API', def: 'Opens top-layer popups declaratively via popovertarget' }
+    ],
+    tf: [
+      { s: '<body style="background-color: color:#ff0000;"> is valid CSS syntax.', ans: false, exp: 'False — "color:" inside background-color is a syntax error from the PDF. Correct: background-color: #ff0000;' },
+      { s: '<input type="radio"> allows selecting ONE of many choices.', ans: true, exp: 'True — radio buttons are mutually exclusive when they share the same name.' },
+      { s: '<input type="checkbox"> allows selecting ZERO or MORE choices.', ans: true, exp: 'True — checkboxes support independent multi-selection.' },
+      { s: 'The <img> element requires a closing </img> tag in HTML5.', ans: false, exp: 'False — <img> is a void element and has no closing tag.' },
+      { s: 'Web Workers allow JavaScript to run in the background without blocking page clicks.', ans: true, exp: 'True — background execution keeps the UI responsive.' },
+      { s: 'The Popover API requires writing JavaScript onclick handlers to open a tip.', ans: false, exp: 'False — popovertarget="id" and popover work natively with zero JavaScript.' }
+    ],
+    buildPage: [
+      {
+        title: 'Challenge 1: Basic Structure',
+        goal: 'Write HTML containing an <h1> saying "My First Heading" and a <p> saying "My first paragraph."',
+        required: ['<h1>', '</h1>', '<p>', '</p>', 'My First Heading'],
+        starter: '<!-- Write your h1 and p here -->\n'
+      },
+      {
+        title: 'Challenge 2: Ordered Coffee List',
+        goal: 'Create an ordered list (<ol>) with 3 <li> items: Coffee, Tea, Milk.',
+        required: ['<ol>', '<li>', 'Coffee', 'Tea', 'Milk', '</ol>'],
+        starter: '<ol>\n  \n</ol>'
+      },
+      {
+        title: 'Challenge 3: Popover Tip',
+        goal: 'Build a Popover button ("Show Tip") targeting a <div id="tip1" popover> with helpful text.',
+        required: ['<button', 'popovertarget="tip1"', '<div', 'id="tip1"', 'popover'],
+        starter: '<button popovertarget="tip1">Show Tip</button>\n'
+      }
+    ]
+  },
+
+  playgroundPresets: [
+    { id: 'p-l1', name: 'L1: Background Colors', html: '<div style="background-color: yellow; padding: 14px; margin-bottom: 8px;">Color Name: yellow</div>\n<div style="background-color: rgb(255, 0, 0); color: #fff; padding: 14px; margin-bottom: 8px;">RGB: rgb(255, 0, 0)</div>\n<div style="background-color: #ff0000; color: #fff; padding: 14px;">HEX (Corrected): #ff0000</div>', css: 'body { font-family: sans-serif; padding: 12px; }', js: '' },
+    { id: 'p-l2', name: 'L2: Basic Structure', html: '<h1>My First Heading</h1>\n<p>My first paragraph.</p>', css: 'body { font-family: Georgia, serif; padding: 16px; background: #FCF9F3; color: #2A201A; }', js: '' },
+    { id: 'p-l4', name: 'L4: Student Table', html: '<table>\n  <tr><th>No Student</th><th>Student Name</th><th>Student Deg</th></tr>\n  <tr><td>1</td><td>Ahmad</td><td>85</td></tr>\n  <tr><td>2</td><td>Michael</td><td>86</td></tr>\n</table>', css: 'table { border-collapse: collapse; width: 100%; font-family: sans-serif; }\nth, td { border: 1px solid #5C3D2E; padding: 8px; text-align: left; }\nth { background: #EAE1D2; }', js: '' },
+    { id: 'p-l5', name: 'L5: Ordered List', html: '<h3>Hot Drinks (Ordered)</h3>\n<ol>\n  <li>Coffee</li>\n  <li>Tea</li>\n  <li>Milk</li>\n</ol>', css: 'body { font-family: sans-serif; padding: 14px; }', js: '' },
+    { id: 'p-l7', name: 'L7: onclick Button', html: '<button id="demoBtn" onclick="showMessage()">Click Me</button>\n<p id="out"></p>', css: 'button { padding: 10px 18px; background: #5C3D2E; color: #fff; border: 0; border-radius: 4px; cursor: pointer; }', js: 'function showMessage() {\n  document.getElementById("out").textContent = "Hello! onclick triggered JavaScript.";\n}' },
+    { id: 'p-l8', name: 'L8: First & Last Name Form', html: '<form onsubmit="event.preventDefault(); document.getElementById(\'res\').textContent = \'Submitted: \' + fname.value + \' \' + lname.value;">\n  <label for="fname">First name:</label><br>\n  <input type="text" id="fname" name="fname" value="John"><br><br>\n  <label for="lname">Last name:</label><br>\n  <input type="text" id="lname" name="lname" value="Doe"><br><br>\n  <input type="submit" value="Submit">\n</form>\n<p id="res"></p>', css: 'body { font-family: sans-serif; padding: 14px; }', js: '' },
+    { id: 'p-l12', name: 'L12: Canvas API', html: '<canvas id="c" width="280" height="100" style="border:1px solid #5C3D2E;"></canvas>', css: 'body { padding: 14px; }', js: 'const ctx = document.getElementById("c").getContext("2d");\nctx.fillStyle = "#5C3D2E";\nctx.fillRect(16, 18, 248, 64);\nctx.fillStyle = "#FCF9F3";\nctx.font = "bold 16px sans-serif";\nctx.fillText("Canvas API Drawing!", 55, 56);' },
+    { id: 'p-l13', name: 'L13: Popover API', html: '<button popovertarget="tip1">Show Tip</button>\n<div id="tip1" popover style="padding:14px;border:2px solid #5C3D2E;border-radius:6px;">\n  Here we can show a helpful tip.\n</div>', css: 'body { font-family: sans-serif; padding: 20px; }\nbutton { padding: 8px 14px; background: #5C3D2E; color: #fff; border: 0; border-radius: 4px; cursor: pointer; }', js: '' }
+  ]
+};
+
+
+/* ==========================================================================
+   Web App Mastery — Complete 13-Lesson Learning Center (js/lessons.js)
+   Includes interactive live demos inside lessons (Colors, Table Modifier,
+   Button Editor, Safe onclick, Form Builder, 5 Inputs, Media, Web APIs, Popover).
+   ========================================================================== */
+
+window.WAM_LESSONS = (function () {
+  var currentLessonId = null;
+  var miniAnswers = {};
+  var customRows = [
+    { no: '1', name: 'Ahmad', deg: '85' },
+    { no: '2', name: 'Michael', deg: '86' }
+  ];
+  var customBtnText = 'Click Me';
+  var formDemo = { fname: 'John', lname: 'Doe', btn: 'Submit' };
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function t(en, ar) {
+    return (window.WAM_APP && window.WAM_APP.getLang() === 'ar') ? ar : en;
+  }
+
+  function getLesson(id) {
+    var list = window.WAM_DATA.lessons;
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return list[0];
+  }
+
+  function getMcq(id) {
+    var list = window.WAM_DATA.mcqs;
+    for (var i = 0; i < list.length; i++) if (list[i].id === id) return list[i];
+    return null;
+  }
+
+  function selectLesson(id) {
+    currentLessonId = id;
+    window.WAM_STORAGE.update(function (st) { st.lastLessonId = id; });
+    render();
+  }
+
+  function toggleComplete(id) {
+    var added = false;
+    window.WAM_STORAGE.update(function (st) {
+      var idx = st.completedLessons.indexOf(id);
+      if (idx === -1) {
+        st.completedLessons.push(id);
+        st.dailyDone += 1;
+        added = true;
+        var l = getLesson(id);
+        window.WAM_STORAGE.log(st, 'Lesson Completed', 'L' + l.num + ': ' + l.titleEn);
+      } else {
+        st.completedLessons.splice(idx, 1);
+      }
+    });
+    if (window.WAM_APP) {
+      window.WAM_APP.toast(added ? t('Lesson marked completed!', 'تم تحديد الدرس كمكتمل!') : t('Lesson unmarked.', 'تم إلغاء اكتمال الدرس.'));
+      window.WAM_APP.refreshMeta();
+    }
+    render();
+  }
+
+  function buildInteractiveDemo(lesson) {
+    var k = lesson.interactiveType;
+    if (k === 'colors') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Interactive Color Switcher</div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">' +
+          '<button type="button" class="btn btn-secondary btn-sm" data-demo-bg="yellow" data-demo-fg="#2A201A">Name: yellow</button>' +
+          '<button type="button" class="btn btn-secondary btn-sm" data-demo-bg="rgb(255, 0, 0)" data-demo-fg="#FFFFFF">RGB: rgb(255, 0, 0)</button>' +
+          '<button type="button" class="btn btn-secondary btn-sm" data-demo-bg="#ff0000" data-demo-fg="#FFFFFF">HEX: #ff0000</button>' +
+          '<button type="button" class="btn btn-secondary btn-sm" data-demo-bg="#EAE1D2" data-demo-fg="#2A201A">HEX: #EAE1D2</button>' +
+        '</div>' +
+        '<div id="demo-color-stage" style="padding:18px;border-radius:4px;border:1px solid var(--border);background:yellow;color:#2A201A;font-weight:700;">' +
+          '&lt;body style="background-color: yellow;"&gt;' +
+        '</div>' +
+      '</div>';
+    }
+    if (k === 'image') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Visual Result &amp; Alt Fallback Demo</div>' +
+        '<div class="grid-2">' +
+          '<div class="card-beige" style="text-align:center;">' +
+            '<svg width="140" height="84" viewBox="0 0 140 84" role="img" aria-label="HITU Photo"><rect width="140" height="84" rx="6" fill="#5C3D2E"/><text x="70" y="46" text-anchor="middle" fill="#FCF9F3" font-family="Georgia,serif" font-size="16" font-weight="700">HITU Photo</text></svg>' +
+            '<div style="font-size:0.8rem;color:var(--muted);margin-top:4px;">When <code>hitu.jpg</code> exists</div>' +
+          '</div>' +
+          '<div class="card-beige" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">' +
+            '<div style="padding:10px 14px;border:1px dashed var(--err);border-radius:4px;font-size:0.86rem;">[Broken Image] <strong>HITU Photo</strong></div>' +
+            '<div style="font-size:0.8rem;color:var(--muted);margin-top:6px;">When <code>src</code> fails, <code>alt</code> text is shown</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    if (k === 'table') {
+      var rowsHtml = customRows.map(function (r) {
+        return '<tr><td>' + esc(r.no) + '</td><td>' + esc(r.name) + '</td><td>' + esc(r.deg) + '</td></tr>';
+      }).join('');
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Interactive Table Modifier</div>' +
+        '<div class="table-wrap"><table class="table"><thead><tr><th>No Student</th><th>Student Name</th><th>Student Deg</th></tr></thead><tbody>' + rowsHtml + '</tbody></table></div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">' +
+          '<input id="tbl-no" class="input" placeholder="No" style="width:70px;" value="' + (customRows.length + 1) + '">' +
+          '<input id="tbl-name" class="input" placeholder="Student Name" style="flex:1;min-width:130px;">' +
+          '<input id="tbl-deg" class="input" placeholder="Degree" style="width:90px;">' +
+          '<button type="button" class="btn btn-primary btn-sm" id="btn-add-row">Add Row</button>' +
+          '<button type="button" class="btn btn-secondary btn-sm" id="btn-reset-rows">Reset</button>' +
+        '</div>' +
+      '</div>';
+    }
+    if (k === 'button') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Live Button Text Editor</div>' +
+        '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">' +
+          '<input id="demo-btn-inp" class="input" style="max-width:240px;" value="' + esc(customBtnText) + '">' +
+          '<button type="button" class="btn btn-primary" id="demo-btn-live">' + esc(customBtnText) + '</button>' +
+        '</div>' +
+        '<pre class="code-box" id="demo-btn-code" style="margin-top:10px;">&lt;button&gt;' + esc(customBtnText) + '&lt;/button&gt;</pre>' +
+      '</div>';
+    }
+    if (k === 'onclick') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Live onclick Event Demo</div>' +
+        '<button type="button" class="btn btn-primary" id="demo-onclick-btn">Click Me</button>' +
+        '<div id="demo-onclick-out" style="margin-top:10px;font-size:0.88rem;color:var(--ok);font-weight:600;"></div>' +
+      '</div>';
+    }
+    if (k === 'form') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Interactive Form Builder &amp; Preview</div>' +
+        '<div class="grid-2">' +
+          '<div class="card-beige">' +
+            '<label style="font-size:0.8rem;font-weight:700;">Default First Name</label><input id="fm-fn" class="input" style="margin-bottom:8px;" value="' + esc(formDemo.fname) + '">' +
+            '<label style="font-size:0.8rem;font-weight:700;">Default Last Name</label><input id="fm-ln" class="input" style="margin-bottom:8px;" value="' + esc(formDemo.lname) + '">' +
+            '<label style="font-size:0.8rem;font-weight:700;">Submit Label</label><input id="fm-bt" class="input" value="' + esc(formDemo.btn) + '">' +
+          '</div>' +
+          '<div class="card">' +
+            '<form id="fm-preview-form">' +
+              '<label for="pv-fn">First name:</label><br><input type="text" id="pv-fn" class="input" style="margin:4px 0 8px;" value="' + esc(formDemo.fname) + '">' +
+              '<label for="pv-ln">Last name:</label><br><input type="text" id="pv-ln" class="input" style="margin:4px 0 10px;" value="' + esc(formDemo.lname) + '">' +
+              '<input type="submit" class="btn btn-primary btn-sm" value="' + esc(formDemo.btn) + '">' +
+            '</form>' +
+            '<div id="fm-preview-msg" style="margin-top:8px;font-size:0.84rem;color:var(--ok);font-weight:600;"></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    if (k === 'inputs') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Live Showcase of All 5 Input Types</div>' +
+        '<div style="display:flex;flex-direction:column;gap:10px;font-size:0.9rem;">' +
+          '<div><strong>1. text:</strong> <input type="text" class="input" style="max-width:220px;display:inline-block;" value="Hello HTML"></div>' +
+          '<div><strong>2. radio (pick ONE):</strong> <label><input type="radio" name="demo-rad" checked> Frontend</label> &nbsp; <label><input type="radio" name="demo-rad"> Backend</label></div>' +
+          '<div><strong>3. checkbox (pick 0+):</strong> <label><input type="checkbox" checked> HTML</label> &nbsp; <label><input type="checkbox" checked> CSS</label> &nbsp; <label><input type="checkbox"> JS</label></div>' +
+          '<div><strong>4. submit &amp; 5. button:</strong> <input type="submit" class="btn btn-primary btn-sm" value="Submit" id="demo-sub-btn"> <input type="button" class="btn btn-secondary btn-sm" value="Click Me" id="demo-plain-btn"> <span id="demo-inp-msg" style="font-size:0.82rem;color:var(--ok);margin-left:8px;"></span></div>' +
+        '</div>' +
+      '</div>';
+    }
+    if (k === 'video') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">HTML5 &lt;video controls&gt; Element Preview</div>' +
+        '<video width="400" controls style="max-width:100%;border-radius:4px;background:#241D18;"><source src="mov_HITU.mp4" type="video/mp4">Your browser supports HTML5 video.</video>' +
+        '<div style="font-size:0.8rem;color:var(--muted);margin-top:6px;">Place <code>mov_HITU.mp4</code> in the same folder as <code>index.html</code> to play your course video directly in this player.</div>' +
+      '</div>';
+    }
+    if (k === 'audio') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">HTML5 &lt;audio controls&gt; Element Preview</div>' +
+        '<audio controls style="width:100%;max-width:400px;"><source src="horse.mp3" type="audio/mpeg"></audio>' +
+        '<div style="font-size:0.8rem;color:var(--muted);margin-top:6px;">Place <code>horse.mp3</code> next to <code>index.html</code> to play the file; controls render natively via the <code>controls</code> attribute.</div>' +
+      '</div>';
+    }
+    if (k === 'webapis') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Live Static-Safe Web API Demos (Canvas &amp; Web Storage)</div>' +
+        '<div class="grid-2">' +
+          '<div class="card-beige">' +
+            '<div style="font-weight:700;font-size:0.86rem;margin-bottom:6px;">Canvas API Live Drawing</div>' +
+            '<canvas id="demo-api-canvas" width="240" height="72" style="background:#FCF9F3;border:1px solid var(--border);border-radius:4px;max-width:100%;"></canvas>' +
+          '</div>' +
+          '<div class="card-beige">' +
+            '<div style="font-weight:700;font-size:0.86rem;margin-bottom:6px;">Web Storage API Test</div>' +
+            '<div style="display:flex;gap:6px;"><input id="demo-ls-inp" class="input" placeholder="Save a note..."><button type="button" class="btn btn-primary btn-sm" id="demo-ls-save">Save</button></div>' +
+            '<div id="demo-ls-out" style="font-size:0.82rem;color:var(--muted);margin-top:6px;"></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }
+    if (k === 'popover') {
+      return '<div class="demo-box" dir="ltr">' +
+        '<div class="eyebrow" style="margin-bottom:8px;">Live Native HTML Popover API Demo</div>' +
+        '<button type="button" class="btn btn-primary" popovertarget="live-tip1">Show Tip</button>' +
+        '<div id="live-tip1" popover style="padding:16px 20px;border:2px solid #5C3D2E;border-radius:6px;background:#FCF9F3;color:#2A201A;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.18);">Here we can show a helpful tip. (Click outside or press Esc to close)</div>' +
+      '</div>';
+    }
+    return '';
+  }
+
+  function render() {
+    var root = document.getElementById('view-lessons');
+    if (!root) return;
+    var st = window.WAM_STORAGE.load();
+    var lessons = window.WAM_DATA.lessons;
+    if (!currentLessonId) currentLessonId = st.lastLessonId || lessons[0].id;
+    var lesson = getLesson(currentLessonId);
+    var isDone = st.completedLessons.indexOf(lesson.id) !== -1;
+    var isAr = window.WAM_APP && window.WAM_APP.getLang() === 'ar';
+
+    var tabsHtml = lessons.map(function (l) {
+      var done = st.completedLessons.indexOf(l.id) !== -1;
+      return '<button type="button" class="tab' + (l.id === lesson.id ? ' active' : '') + '" data-lesson-id="' + l.id + '">' +
+        'L' + l.num + (done ? ' ✓' : '') + ' · ' + esc(isAr ? l.titleAr : l.titleEn) +
+      '</button>';
+    }).join('');
+
+    var tagsHtml = (lesson.tags || []).map(function (tg) {
+      return '<tr><td><code>' + esc(tg.name) + '</code></td><td>' + esc(tg.desc) + '</td></tr>';
+    }).join('');
+
+    var miniHtml = (lesson.miniQuizIds || []).map(function (qId, idx) {
+      var q = getMcq(qId);
+      if (!q) return '';
+      var chosen = miniAnswers[qId];
+      var answered = chosen !== undefined;
+      var letters = ['A', 'B', 'C', 'D'];
+      var opts = q.opts.map(function (o, oi) {
+        var cls = 'opt-btn';
+        if (answered) { if (oi === q.correct) cls += ' ok'; else if (oi === chosen) cls += ' err'; }
+        return '<button type="button" class="' + cls + '" data-mini-q="' + qId + '" data-mini-opt="' + oi + '"' + (answered ? ' disabled' : '') + '>' +
+          '<span class="opt-key">' + letters[oi] + '</span><span dir="ltr">' + esc(o) + '</span></button>';
+      }).join('');
+      var fb = answered
+        ? '<div class="fb-box ' + (chosen === q.correct ? 'ok' : 'err') + '" dir="ltr"><strong>' + (chosen === q.correct ? t('Correct! ', 'إجابة صحيحة! ') : t('Incorrect. ', 'إجابة خاطئة. ')) + '</strong>' + esc(q.exp) + '</div>'
+        : '';
+      return '<div class="card-beige" style="margin-top:10px;"><div style="font-weight:700;margin-bottom:6px;" dir="ltr">' + (idx + 1) + '. ' + esc(q.q) + '</div><div class="opt-list">' + opts + '</div>' + fb + '</div>';
+    }).join('');
+
+    var idxCur = lessons.indexOf(lesson);
+    var prevBtn = idxCur > 0 ? '<button type="button" class="btn btn-secondary" data-lesson-id="' + lessons[idxCur - 1].id + '">' + t('← Previous Lesson', '→ الدرس السابق') + '</button>' : '<div></div>';
+    var nextBtn = idxCur < lessons.length - 1 ? '<button type="button" class="btn btn-primary" data-lesson-id="' + lessons[idxCur + 1].id + '">' + t('Next Lesson →', 'الدرس التالي ←') + '</button>' : '<div></div>';
+
+    root.innerHTML =
+      '<div class="page-head">' +
+        '<div class="eyebrow">' + t('Learning Center · 13 Midterm Lessons', 'مركز التعلم · 13 درساً للميدتيرم') + '</div>' +
+        '<h1 class="page-title">' + t('Complete HTML & Web APIs Syllabus', 'منهج تطوير تطبيقات الويب الكامل') + '</h1>' +
+        '<p class="page-sub">' + t('Every PDF question explained in English and Egyptian Arabic with valid code, interactive demos, and mini quizzes.', 'شرح كل سؤال في الميدتيرم بالإنجليزية والعامية المصرية مع أكواد صحيحة وتجارب تفاعلية واختبار مصغر.') + '</p>' +
+      '</div>' +
+      '<div class="tabs">' + tabsHtml + '</div>' +
+
+      '<div class="card" style="margin-bottom:14px;">' +
+        '<div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">' +
+          '<div>' +
+            '<span class="badge ' + (isDone ? 'badge-ok' : 'badge-beige') + '">' + (isDone ? t('Completed ✓', 'مكتمل ✓') : t('Lesson ' + lesson.num + ' of 13', 'درس ' + lesson.num + ' من 13')) + '</span>' +
+            '<h2 style="margin:6px 0 2px;font-family:var(--font-serif);font-size:1.35rem;">' + esc(isAr ? lesson.titleAr : lesson.titleEn) + '</h2>' +
+            '<div style="font-size:0.85rem;color:var(--muted);">' + esc(isAr ? lesson.titleEn : lesson.titleAr) + '</div>' +
+          '</div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;">' +
+            '<button type="button" class="btn btn-secondary btn-sm" id="btn-open-pg">' + t('Try in Playground', 'جرّب في المحرر') + '</button>' +
+            '<button type="button" class="btn ' + (isDone ? 'btn-secondary' : 'btn-primary') + ' btn-sm" id="btn-toggle-done">' + (isDone ? t('Completed ✓', 'مكتمل ✓') : t('Mark Completed', 'تحديد كمكتمل')) + '</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="card-beige" style="margin-bottom:12px;" dir="ltr">' +
+          '<div class="eyebrow">' + t('1. Original Midterm PDF Question', '1. السؤال الأصلي من الميدتيرم') + '</div>' +
+          '<div style="font-weight:700;margin-top:4px;">' + esc(lesson.origQuestion) + '</div>' +
+        '</div>' +
+
+        (lesson.pdfErrorNote ? '<div class="fb-box warn" style="margin-bottom:12px;" dir="ltr"><strong>Important Accuracy Correction: </strong>' + esc(lesson.pdfErrorNote) + '</div>' : '') +
+
+        '<div style="margin-bottom:12px;" dir="ltr">' +
+          '<div class="eyebrow">' + t('2. Short Model Answer (English)', '2. الإجابة النموذجية المختصرة') + '</div>' +
+          '<p style="margin:5px 0 0;">' + esc(lesson.shortAnswer) + '</p>' +
+        '</div>' +
+
+        '<div class="ar-box" style="margin-bottom:12px;">' +
+          '<div style="font-size:0.78rem;font-weight:800;color:var(--cinnamon);margin-bottom:4px;">3. الشرح المبسط بالعامية المصرية</div>' +
+          '<div>' + esc(lesson.arExplain) + '</div>' +
+        '</div>' +
+
+        '<div dir="ltr">' +
+          '<div class="eyebrow">' + t('4. Valid HTML Code Example', '4. مثال الكود الصحيح') + '</div>' +
+          '<pre class="code-box"><code>' + esc(lesson.codeExample) + '</code></pre>' +
+        '</div>' +
+
+        buildInteractiveDemo(lesson) +
+      '</div>' +
+
+      '<div class="grid-2" style="margin-bottom:14px;">' +
+        '<div class="card" dir="ltr">' +
+          '<div class="eyebrow">' + t('5. HTML Tags & Attributes Breakdown', '5. شرح الوسوم والخصائص') + '</div>' +
+          '<div class="table-wrap"><table class="table"><thead><tr><th>Tag / Attr</th><th>Purpose</th></tr></thead><tbody>' + tagsHtml + '</tbody></table></div>' +
+          '<div class="eyebrow" style="margin-top:12px;">' + t('6. Practical Usage & Expected Output', '6. الاستخدام العملي والنتيجة المتوقعة') + '</div>' +
+          '<p style="margin:5px 0 6px;font-size:0.88rem;"><strong>Practical:</strong> ' + esc(lesson.practical) + '</p>' +
+          '<p style="margin:0;font-size:0.88rem;"><strong>Browser Output:</strong> ' + esc(lesson.expectedOutput) + '</p>' +
+        '</div>' +
+
+        '<div class="card" dir="ltr">' +
+          '<div class="eyebrow" style="color:var(--err);">' + t('7. Common Mistakes to Avoid', '7. أخطاء شائعة تجنبها') + '</div>' +
+          '<ul style="margin:6px 0 12px;padding-inline-start:20px;font-size:0.88rem;">' +
+            (lesson.mistakes || []).map(function (m) { return '<li style="margin-bottom:4px;">' + esc(m) + '</li>'; }).join('') +
+          '</ul>' +
+          '<div class="eyebrow">' + t('8. Important Exam Keywords', '8. كلمات مفتاحية مهمة للامتحان') + '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 12px;">' +
+            (lesson.keywords || []).map(function (k) { return '<span class="kw-chip">' + esc(k) + '</span>'; }).join('') +
+          '</div>' +
+          '<div class="card-beige" style="font-size:0.88rem;"><strong>Memorization Summary:</strong> ' + esc(lesson.summary) + '</div>' +
+          '<div style="font-size:0.86rem;margin-top:10px;color:var(--muted);"><strong>Practice Exercise:</strong> ' + esc(lesson.exercise) + '</div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="card" style="margin-bottom:16px;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">' +
+          '<div><div class="eyebrow">' + t('9. Short Lesson Quiz', '9. اختبار قصير على الدرس') + '</div><h3 style="margin:2px 0 0;font-size:1.05rem;">' + t('Check Your Understanding of Lesson ' + lesson.num, 'اختبر فهمك للدرس ' + lesson.num) + '</h3></div>' +
+          '<button type="button" class="btn btn-secondary btn-sm" id="btn-reset-mini">' + t('Reset Quiz', 'إعادة') + '</button>' +
+        '</div>' +
+        miniHtml +
+      '</div>' +
+
+      '<div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">' + prevBtn + nextBtn + '</div>';
+
+    /* Event bindings */
+    var lBtns = root.querySelectorAll('[data-lesson-id]');
+    for (var i = 0; i < lBtns.length; i++) {
+      lBtns[i].addEventListener('click', function () { selectLesson(this.getAttribute('data-lesson-id')); });
+    }
+    var bDone = document.getElementById('btn-toggle-done');
+    if (bDone) bDone.addEventListener('click', function () { toggleComplete(lesson.id); });
+
+    var bPg = document.getElementById('btn-open-pg');
+    if (bPg) bPg.addEventListener('click', function () {
+      if (window.WAM_PLAYGROUND) window.WAM_PLAYGROUND.loadCode(lesson.codeExample, 'body { font-family: sans-serif; padding: 14px; }', '');
+      if (window.WAM_APP) window.WAM_APP.navigate('playground');
+    });
+
+    var bRst = document.getElementById('btn-reset-mini');
+    if (bRst) bRst.addEventListener('click', function () {
+      (lesson.miniQuizIds || []).forEach(function (id) { delete miniAnswers[id]; });
+      render();
+    });
+
+    var mBtns = root.querySelectorAll('[data-mini-q]');
+    for (var j = 0; j < mBtns.length; j++) {
+      mBtns[j].addEventListener('click', function () {
+        var qId = this.getAttribute('data-mini-q');
+        var oi = parseInt(this.getAttribute('data-mini-opt'), 10);
+        if (miniAnswers[qId] !== undefined) return;
+        miniAnswers[qId] = oi;
+        var q = getMcq(qId);
+        if (q) window.WAM_STORAGE.recordMcq(qId, oi === q.correct);
+        if (window.WAM_APP) window.WAM_APP.refreshMeta();
+        render();
+      });
+    }
+
+    /* Interactive Demo Listeners */
+    var bgBtns = root.querySelectorAll('[data-demo-bg]');
+    for (var b = 0; b < bgBtns.length; b++) {
+      bgBtns[b].addEventListener('click', function () {
+        var bg = this.getAttribute('data-demo-bg');
+        var fg = this.getAttribute('data-demo-fg');
+        var stg = document.getElementById('demo-color-stage');
+        if (stg) { stg.style.background = bg; stg.style.color = fg; stg.textContent = '<body style="background-color: ' + bg + ';">'; }
+      });
+    }
+    var addRow = document.getElementById('btn-add-row');
+    if (addRow) addRow.addEventListener('click', function () {
+      var no = document.getElementById('tbl-no').value.trim() || String(customRows.length + 1);
+      var nm = document.getElementById('tbl-name').value.trim() || 'Sara';
+      var dg = document.getElementById('tbl-deg').value.trim() || '92';
+      customRows.push({ no: no, name: nm, deg: dg });
+      render();
+    });
+    var rstRows = document.getElementById('btn-reset-rows');
+    if (rstRows) rstRows.addEventListener('click', function () {
+      customRows = [{ no: '1', name: 'Ahmad', deg: '85' }, { no: '2', name: 'Michael', deg: '86' }];
+      render();
+    });
+    var btnInp = document.getElementById('demo-btn-inp');
+    if (btnInp) btnInp.addEventListener('input', function () {
+      customBtnText = this.value;
+      var lb = document.getElementById('demo-btn-live');
+      var lc = document.getElementById('demo-btn-code');
+      if (lb) lb.textContent = customBtnText || 'Button';
+      if (lc) lc.textContent = '<button>' + customBtnText + '</button>';
+    });
+    var ocBtn = document.getElementById('demo-onclick-btn');
+    if (ocBtn) ocBtn.addEventListener('click', function () {
+      var o = document.getElementById('demo-onclick-out');
+      if (o) o.textContent = 'Alert simulated: "Hello!" — onclick triggered JavaScript successfully!';
+    });
+    ['fm-fn', 'fm-ln', 'fm-bt'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', function () {
+        formDemo.fname = document.getElementById('fm-fn').value;
+        formDemo.lname = document.getElementById('fm-ln').value;
+        formDemo.btn = document.getElementById('fm-bt').value;
+        var pfn = document.getElementById('pv-fn');
+        var pln = document.getElementById('pv-ln');
+        if (pfn) pfn.value = formDemo.fname;
+        if (pln) pln.value = formDemo.lname;
+      });
+    });
+    var pvForm = document.getElementById('fm-preview-form');
+    if (pvForm) pvForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var m = document.getElementById('fm-preview-msg');
+      if (m) m.textContent = 'Form preview submitted: ' + document.getElementById('pv-fn').value + ' ' + document.getElementById('pv-ln').value;
+    });
+    var dSub = document.getElementById('demo-sub-btn');
+    var dPln = document.getElementById('demo-plain-btn');
+    if (dSub) dSub.addEventListener('click', function (e) { e.preventDefault(); var m = document.getElementById('demo-inp-msg'); if (m) m.textContent = 'type="submit" submits the enclosing form!'; });
+    if (dPln) dPln.addEventListener('click', function () { var m = document.getElementById('demo-inp-msg'); if (m) m.textContent = 'type="button" triggers custom JS only!'; });
+
+    var cv = document.getElementById('demo-api-canvas');
+    if (cv && cv.getContext) {
+      var cx = cv.getContext('2d');
+      cx.fillStyle = '#5C3D2E'; cx.fillRect(10, 12, 220, 48);
+      cx.fillStyle = '#FCF9F3'; cx.font = 'bold 14px sans-serif'; cx.fillText('HTML5 Canvas API', 52, 41);
+    }
+    var lsSave = document.getElementById('demo-ls-save');
+    if (lsSave) lsSave.addEventListener('click', function () {
+      var v = document.getElementById('demo-ls-inp').value;
+      try { window.localStorage.setItem('wam_api_demo_note', v); } catch (e) {}
+      var o = document.getElementById('demo-ls-out');
+      if (o) o.textContent = 'Saved in localStorage: "' + v + '"';
+    });
+  }
+
+  return { render: render, selectLesson: selectLesson, toggleComplete: toggleComplete };
+})();
+
+
+/* ==========================================================================
+   Web App Mastery — Interactive Code Playground (js/playground.js)
+   Live HTML, CSS, and JS editor with sandboxed iframe preview, presets,
+   copy, reset, and basic HTML/CSS error diagnostics.
+   ========================================================================== */
+
+window.WAM_PLAYGROUND = (function () {
+  var htmlCode = '<h1>My First Heading</h1>\n<p>My first paragraph.</p>';
+  var cssCode = 'body { font-family: Georgia, serif; padding: 16px; background: #FCF9F3; color: #2A201A; }';
+  var jsCode = '';
+  var autoRun = true;
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function t(en, ar) {
+    return (window.WAM_APP && window.WAM_APP.getLang() === 'ar') ? ar : en;
+  }
+
+  function loadCode(h, c, j) {
+    htmlCode = h || '';
+    cssCode = c || '';
+    jsCode = j || '';
+  }
+
+  function checkBasicErrors(html, css) {
+    var warns = [];
+    if (/<\s+[a-zA-Z]/.test(html)) warns.push('Found a space right after "<" (e.g., "< body>"). Remove the space after "<".');
+    if (/background-color\s*:\s*color\s*:/i.test(html + ' ' + css)) warns.push('Invalid CSS: "background-color: color:#..." — write "background-color: #ff0000;" directly.');
+    if (/<\/img>/i.test(html)) warns.push('<img> is a void element and must not have a closing </img> tag.');
+    if (/<button[^>]*onclick="[^"]*alert\("[^"]*"\)"/i.test(html)) warns.push('Nested double quotes inside onclick="alert("...")" will break HTML. Use single quotes inside.');
+    return warns;
+  }
+
+  function runPreview() {
+    var frame = document.getElementById('pg-iframe');
+    var diag = document.getElementById('pg-diag');
+    var warns = checkBasicErrors(htmlCode, cssCode);
+    if (diag) {
+      if (warns.length) {
+        diag.className = 'fb-box warn';
+        diag.innerHTML = '<strong>' + t('Basic Syntax Checks:', 'تنبيهات الصياغة:') + '</strong><ul style="margin:4px 0 0;padding-inline-start:18px;">' +
+          warns.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>';
+      } else {
+        diag.className = 'fb-box ok';
+        diag.textContent = t('No basic syntax issues detected.', 'لا توجد أخطاء صياغة أساسية.');
+      }
+    }
+    if (frame) {
+      var doc = '<!DOCTYPE html><html><head><meta charset="UTF-8"><style>' + cssCode + '</style></head><body>' +
+        htmlCode + '<script>try{' + jsCode + '}catch(e){document.body.insertAdjacentHTML("beforeend","<pre style=\\"color:#96352A;background:#F6E6E3;padding:8px;\\">JS Error: "+e.message+"</pre>");}<\/script></body></html>';
+      frame.srcdoc = doc;
+    }
+  }
+
+  function render() {
+    var root = document.getElementById('view-playground');
+    if (!root) return;
+    var presets = window.WAM_DATA.playgroundPresets || [];
+    var presetOpts = '<option value="">' + t('Load Lesson Example...', 'تحميل مثال من الدروس...') + '</option>' +
+      presets.map(function (p) { return '<option value="' + p.id + '">' + esc(p.name) + '</option>'; }).join('');
+
+    root.innerHTML =
+      '<div class="page-head">' +
+        '<div class="eyebrow">' + t('Interactive Code Playground · Sandboxed Preview', 'محرر الأكواد التفاعلي · معاينة آمنة') + '</div>' +
+        '<h1 class="page-title">' + t('Write & Run HTML, CSS & JavaScript', 'اكتب وشغّل أكواد HTML و CSS و JS') + '</h1>' +
+        '<p class="page-sub">' + t('Load any syllabus example, edit live, check for common mistakes, and preview output immediately inside a sandboxed iframe.', 'حمّل أي مثال من المنهج وعدّل عليه وشاهد النتيجة فوراً داخل إطار معاينة آمن.') + '</p>' +
+      '</div>' +
+
+      '<div class="card-beige" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px;">' +
+        '<select id="pg-preset" class="select" style="flex:1;min-width:200px;">' + presetOpts + '</select>' +
+        '<label style="display:inline-flex;align-items:center;gap:6px;font-size:0.84rem;font-weight:600;cursor:pointer;"><input type="checkbox" id="pg-auto"' + (autoRun ? ' checked' : '') + '> ' + t('Auto-Preview', 'معاينة تلقائية') + '</label>' +
+        '<button type="button" class="btn btn-primary btn-sm" id="pg-run">' + t('Run Code', 'تشغيل') + '</button>' +
+        '<button type="button" class="btn btn-secondary btn-sm" id="pg-copy">' + t('Copy HTML', 'نسخ الكود') + '</button>' +
+        '<button type="button" class="btn btn-secondary btn-sm" id="pg-reset">' + t('Reset', 'إعادة') + '</button>' +
+      '</div>' +
+
+      '<div class="grid-2" style="margin-bottom:14px;">' +
+        '<div class="card" dir="ltr">' +
+          '<div class="eyebrow" style="margin-bottom:6px;">HTML</div>' +
+          '<textarea id="pg-html" class="code-editor" spellcheck="false">' + esc(htmlCode) + '</textarea>' +
+          '<div class="eyebrow" style="margin:10px 0 6px;">CSS</div>' +
+          '<textarea id="pg-css" class="code-editor" style="min-height:95px;" spellcheck="false">' + esc(cssCode) + '</textarea>' +
+          '<div class="eyebrow" style="margin:10px 0 6px;">JavaScript</div>' +
+          '<textarea id="pg-js" class="code-editor" style="min-height:85px;" spellcheck="false">' + esc(jsCode) + '</textarea>' +
+        '</div>' +
+        '<div class="card" dir="ltr">' +
+          '<div class="eyebrow" style="margin-bottom:8px;">' + t('Live Sandboxed Browser Output', 'نتيجة المتصفح المباشرة') + '</div>' +
+          '<iframe id="pg-iframe" class="preview-frame" style="min-height:330px;" sandbox="allow-scripts allow-modals" title="HTML Code Preview"></iframe>' +
+          '<div id="pg-diag" class="fb-box ok" style="margin-top:10px;"></div>' +
+        '</div>' +
+      '</div>';
+
+    var sel = document.getElementById('pg-preset');
+    var hEl = document.getElementById('pg-html');
+    var cEl = document.getElementById('pg-css');
+    var jEl = document.getElementById('pg-js');
+
+    if (sel) sel.addEventListener('change', function () {
+      var id = this.value;
+      for (var i = 0; i < presets.length; i++) {
+        if (presets[i].id === id) {
+          loadCode(presets[i].html, presets[i].css, presets[i].js);
+          render();
+          return;
+        }
+      }
+    });
+    document.getElementById('pg-auto').addEventListener('change', function () { autoRun = this.checked; });
+    document.getElementById('pg-run').addEventListener('click', function () {
+      htmlCode = hEl.value; cssCode = cEl.value; jsCode = jEl.value;
+      runPreview();
+    });
+    document.getElementById('pg-reset').addEventListener('click', function () {
+      loadCode('<h1>My First Heading</h1>\n<p>My first paragraph.</p>', 'body { font-family: Georgia, serif; padding: 16px; background: #FCF9F3; color: #2A201A; }', '');
+      render();
+    });
+    document.getElementById('pg-copy').addEventListener('click', function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(hEl.value).catch(function () {});
+      }
+      if (window.WAM_APP) window.WAM_APP.toast(t('HTML code copied!', 'تم نسخ كود HTML!'));
+    });
+
+    [hEl, cEl, jEl].forEach(function (el) {
+      el.addEventListener('input', function () {
+        htmlCode = hEl.value; cssCode = cEl.value; jsCode = jEl.value;
+        if (autoRun) runPreview();
+      });
+    });
+
+    runPreview();
+  }
+
+  return { render: render, loadCode: loadCode, checkBasicErrors: checkBasicErrors };
+})();
+
+
+/* ==========================================================================
+   Web App Mastery — MCQ, Essay/Coding Practice & Exam Center (js/quizzes.js)
+   1) MCQ Practice (26 MCQs across all 13 lessons, instant feedback, retry wrong)
+   2) Essay & Coding Practice (13 exercises, HTML tag/attr checker, rubric, saves)
+   3) Exam Center (5 modes: Full, MCQ, Essay, Coding, Mixed + timer + nav grid)
+   ========================================================================== */
+
+window.WAM_QUIZZES = (function () {
+  var mcqFilter = 'all';
+  var mcqRandom = false;
+  var mcqList = [];
+  var mcqIdx = 0;
+  var mcqAns = {};
+  var mcqFinished = false;
+
+  var activeEssayId = 'es-1';
+  var essayShowModel = {};
+  var essayRubric = {};
+
+  var exam = null;
+  var examTimerId = null;
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function t(en, ar) { return (window.WAM_APP && window.WAM_APP.getLang() === 'ar') ? ar : en; }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function checkTokens(text, tokens) {
+    var lower = String(text || '').toLowerCase();
+    var hits = [];
+    (tokens || []).forEach(function (tk) {
+      if (lower.indexOf(tk.toLowerCase()) !== -1) hits.push(tk);
+    });
+    return hits;
+  }
+
+  /* ========================================================================
+     1. MCQ PRACTICE
+     ======================================================================== */
+  function buildMcqSession(custom) {
+    var all = window.WAM_DATA.mcqs;
+    var base = custom ? custom.slice() : all.filter(function (q) { return mcqFilter === 'all' || q.lessonId === mcqFilter; });
+    mcqList = mcqRandom ? shuffle(base) : base;
+    mcqIdx = 0; mcqAns = {}; mcqFinished = false;
+  }
+
+  function renderMcq() {
+    var root = document.getElementById('view-mcq');
+    if (!root) return;
+    if (!mcqList.length && !mcqFinished) buildMcqSession();
+
+    var lessonOpts = '<option value="all"' + (mcqFilter === 'all' ? ' selected' : '') + '>' + t('All 13 Lessons (26 MCQs)', 'كل الدروس الـ 13 (26 سؤال)') + '</option>' +
+      window.WAM_DATA.lessons.map(function (l) {
+        return '<option value="' + l.id + '"' + (mcqFilter === l.id ? ' selected' : '') + '>L' + l.num + ': ' + esc(l.titleEn) + '</option>';
+      }).join('');
+
+    var bodyHtml = '';
+    if (mcqFinished) {
+      var okCnt = 0, wrongs = [];
+      mcqList.forEach(function (q) { if (mcqAns[q.id] === q.correct) okCnt++; else wrongs.push(q); });
+      var pct = mcqList.length ? Math.round((okCnt / mcqList.length) * 100) : 0;
+      bodyHtml =
+        '<div class="card">' +
+          '<div class="eyebrow">' + t('MCQ Score Summary', 'نتيجة التدريب') + '</div>' +
+          '<h2 style="margin:4px 0 8px;font-family:var(--font-serif);">' + okCnt + ' / ' + mcqList.length + ' (' + pct + '%)</h2>' +
+          '<div class="progress-track" style="margin-bottom:14px;"><div class="progress-fill" style="width:' + pct + '%;"></div></div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">' +
+            '<button type="button" class="btn btn-primary" id="btn-mcq-again">' + t('Practice Again', 'إعادة التدريب') + '</button>' +
+            (wrongs.length ? '<button type="button" class="btn btn-secondary" id="btn-mcq-wrong">' + t('Retry Incorrect (' + wrongs.length + ')', 'إعادة الخاطئة (' + wrongs.length + ')') + '</button>' : '') +
+          '</div>' +
+          mcqList.map(function (q, i) {
+            var ch = mcqAns[q.id], ok = ch === q.correct;
+            return '<div class="card-beige" style="margin-top:8px;" dir="ltr">' +
+              '<div style="display:flex;justify-content:space-between;gap:8px;"><strong>' + (i + 1) + '. ' + esc(q.q) + '</strong><span class="badge ' + (ok ? 'badge-ok' : 'badge-err') + '">' + (ok ? 'Correct' : 'Wrong') + '</span></div>' +
+              '<div style="font-size:0.85rem;margin-top:4px;">Your answer: <strong>' + esc(ch !== undefined ? q.opts[ch] : '—') + '</strong> · Correct: <strong style="color:var(--ok);">' + esc(q.opts[q.correct]) + '</strong></div>' +
+              '<div style="font-size:0.83rem;color:var(--muted);margin-top:3px;">' + esc(q.exp) + '</div></div>';
+          }).join('') +
+        '</div>';
+    } else if (mcqList.length) {
+      var q = mcqList[mcqIdx], ch = mcqAns[q.id], ans = ch !== undefined, letters = ['A', 'B', 'C', 'D'];
+      var prog = Math.round(((mcqIdx + 1) / mcqList.length) * 100);
+      bodyHtml =
+        '<div class="card">' +
+          '<div style="display:flex;justify-content:space-between;font-size:0.84rem;color:var(--muted);margin-bottom:8px;"><span>' + t('Question ' + (mcqIdx + 1) + ' of ' + mcqList.length, 'السؤال ' + (mcqIdx + 1) + ' من ' + mcqList.length) + '</span><span class="badge badge-beige">' + esc(q.lessonId.toUpperCase()) + '</span></div>' +
+          '<div class="progress-track" style="margin-bottom:16px;"><div class="progress-fill" style="width:' + prog + '%;"></div></div>' +
+          '<h2 style="margin:0 0 8px;font-size:1.1rem;" dir="ltr">' + esc(q.q) + '</h2>' +
+          '<div class="opt-list">' +
+            q.opts.map(function (o, oi) {
+              var cls = 'opt-btn';
+              if (ans) { if (oi === q.correct) cls += ' ok'; else if (oi === ch) cls += ' err'; }
+              return '<button type="button" class="' + cls + '" data-mcq-opt="' + oi + '"' + (ans ? ' disabled' : '') + '><span class="opt-key">' + letters[oi] + '</span><span dir="ltr">' + esc(o) + '</span></button>';
+            }).join('') +
+          '</div>' +
+          (ans ? '<div class="fb-box ' + (ch === q.correct ? 'ok' : 'err') + '" dir="ltr"><strong>' + (ch === q.correct ? t('Correct! ', 'إجابة صحيحة! ') : t('Incorrect. ', 'إجابة خاطئة. ')) + '</strong>' + esc(q.exp) + '</div>' : '') +
+          '<div style="display:flex;justify-content:space-between;gap:8px;margin-top:16px;">' +
+            '<button type="button" class="btn btn-secondary" id="btn-mcq-prev"' + (mcqIdx === 0 ? ' disabled' : '') + '>' + t('← Prev', '→ السابق') + '</button>' +
+            (mcqIdx < mcqList.length - 1
+              ? '<button type="button" class="btn btn-primary" id="btn-mcq-next">' + t('Next →', 'التالي ←') + '</button>'
+              : '<button type="button" class="btn btn-primary" id="btn-mcq-fin">' + t('Finish & Review', 'إنهاء ومراجعة') + '</button>') +
+          '</div>' +
+        '</div>';
+    }
+
+    root.innerHTML =
+      '<div class="page-head">' +
+        '<div class="eyebrow">' + t('MCQ Practice · All 13 Lessons', 'تدريب الاختيار من متعدد · 13 درساً') + '</div>' +
+        '<h1 class="page-title">' + t('Interactive MCQ Practice', 'تدريب أسئلة الاختيار من متعدد') + '</h1>' +
+        '<p class="page-sub">' + t('Green/red instant feedback, detailed explanations, lesson filters, random order, and retry wrong mode.', 'تقييم فوري وشرح تفصيلي وتصفية حسب الدرس وإعادة الأسئلة الخاطئة.') + '</p>' +
+      '</div>' +
+      '<div class="card-beige" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px;">' +
+        '<select class="select" id="sel-mcq-l" style="flex:1;min-width:200px;">' + lessonOpts + '</select>' +
+        '<label style="display:inline-flex;align-items:center;gap:6px;font-size:0.86rem;font-weight:600;cursor:pointer;"><input type="checkbox" id="chk-mcq-r"' + (mcqRandom ? ' checked' : '') + '> ' + t('Random Mode', 'عشوائي') + '</label>' +
+        '<button type="button" class="btn btn-secondary btn-sm" id="btn-mcq-go">' + t('Restart', 'إعادة') + '</button>' +
+      '</div>' + bodyHtml;
+
+    document.getElementById('sel-mcq-l').addEventListener('change', function () { mcqFilter = this.value; buildMcqSession(); renderMcq(); });
+    document.getElementById('chk-mcq-r').addEventListener('change', function () { mcqRandom = this.checked; buildMcqSession(); renderMcq(); });
+    document.getElementById('btn-mcq-go').addEventListener('click', function () { buildMcqSession(); renderMcq(); });
+
+    var oBtns = root.querySelectorAll('[data-mcq-opt]');
+    for (var i = 0; i < oBtns.length; i++) {
+      oBtns[i].addEventListener('click', function () {
+        var q = mcqList[mcqIdx];
+        if (!q || mcqAns[q.id] !== undefined) return;
+        var oi = parseInt(this.getAttribute('data-mcq-opt'), 10);
+        mcqAns[q.id] = oi;
+        window.WAM_STORAGE.recordMcq(q.id, oi === q.correct);
+        if (window.WAM_APP) window.WAM_APP.refreshMeta();
+        renderMcq();
+      });
+    }
+    var bP = document.getElementById('btn-mcq-prev'), bN = document.getElementById('btn-mcq-next'), bF = document.getElementById('btn-mcq-fin'), bA = document.getElementById('btn-mcq-again'), bW = document.getElementById('btn-mcq-wrong');
+    if (bP) bP.addEventListener('click', function () { mcqIdx--; renderMcq(); });
+    if (bN) bN.addEventListener('click', function () { mcqIdx++; renderMcq(); });
+    if (bF) bF.addEventListener('click', function () {
+      mcqFinished = true;
+      var c = 0; mcqList.forEach(function (q) { if (mcqAns[q.id] === q.correct) c++; });
+      window.WAM_STORAGE.update(function (s) { window.WAM_STORAGE.log(s, 'MCQ Practice', c + '/' + mcqList.length + ' correct'); });
+      renderMcq();
+    });
+    if (bA) bA.addEventListener('click', function () { buildMcqSession(); renderMcq(); });
+    if (bW) bW.addEventListener('click', function () { buildMcqSession(mcqList.filter(function (q) { return mcqAns[q.id] !== q.correct; })); renderMcq(); });
+  }
+
+  /* ========================================================================
+     2. ESSAY & CODING PRACTICE (Basic HTML Tag/Attr Checker + Self-Rubric)
+     ======================================================================== */
+  function renderEssay() {
+    var root = document.getElementById('view-essay');
+    if (!root) return;
+    var essays = window.WAM_DATA.essays;
+    var st = window.WAM_STORAGE.load();
+    var cur = essays[0];
+    for (var i = 0; i < essays.length; i++) if (essays[i].id === activeEssayId) { cur = essays[i]; break; }
+    var saved = st.essayDrafts[cur.id] || { text: '' };
+    var hits = checkTokens(saved.text, cur.requiredTokens);
+    var showM = !!essayShowModel[cur.id];
+    var rub = essayRubric[cur.id] || {};
+    var rubCnt = 0;
+
+    var tabsHtml = essays.map(function (e, idx) {
+      var has = st.essayDrafts[e.id] && st.essayDrafts[e.id].text && st.essayDrafts[e.id].text.trim();
+      return '<button type="button" class="tab' + (e.id === cur.id ? ' active' : '') + '" data-es-id="' + e.id + '">Q' + (idx + 1) + ' · ' + esc(e.style) + (has ? ' ✓' : '') + '</button>';
+    }).join('');
+
+    var chipsHtml = cur.requiredTokens.map(function (tk) {
+      var ok = hits.indexOf(tk) !== -1;
+      return '<span class="kw-chip' + (ok ? ' hit' : '') + '" dir="ltr">' + (ok ? '✓ ' : '') + esc(tk) + '</span>';
+    }).join(' ');
+
+    var rubHtml = cur.checklist.map(function (item, idx) {
+      var ck = !!rub[idx]; if (ck) rubCnt++;
+      return '<label style="display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;cursor:pointer;font-size:0.9rem;" dir="ltr"><input type="checkbox" data-rub="' + idx + '"' + (ck ? ' checked' : '') + ' style="margin-top:4px;"><span>' + esc(item) + '</span></label>';
+    }).join('');
+
+    root.innerHTML =
+      '<div class="page-head">' +
+        '<div class="eyebrow">' + t('Essay & Coding Practice · 13 Midterm Exercises', 'التدريب المقالي والبرمجي · 13 تمريناً') + '</div>' +
+        '<h1 class="page-title">' + t('Write HTML Code & Model Answers', 'كتابة أكواد HTML والإجابات المقالية') + '</h1>' +
+        '<p class="page-sub">' + t('Basic automated tag/attribute checker highlights required tokens in real time. Compare against the model answer and self-check honestly — simple token matching is a study aid, not full grading.', 'فحص تلقائي للوسوم والخصائص الأساسية مع الإجابة النموذجية ومعيار التقييم الذاتي.') + '</p>' +
+      '</div>' +
+      '<div class="tabs">' + tabsHtml + '</div>' +
+      '<div class="card" style="margin-bottom:14px;">' +
+        '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">' +
+          '<span class="badge badge-beige">' + esc(cur.style) + ' · ' + esc(cur.lessonId.toUpperCase()) + '</span>' +
+          '<span style="font-size:0.84rem;color:var(--muted);">' + t('Required Tags/Keywords Found: ', 'الوسوم/الكلمات المطابقة: ') + '<strong id="es-hit-cnt">' + hits.length + ' / ' + cur.requiredTokens.length + '</strong></span>' +
+        '</div>' +
+        '<h2 style="margin:0 0 10px;font-size:1.1rem;" dir="ltr">' + esc(cur.prompt) + '</h2>' +
+        '<textarea id="es-ta" class="' + (cur.isCode ? 'code-editor' : 'textarea') + '" dir="ltr" placeholder="Write your HTML code or structured exam answer here...">' + esc(saved.text || '') + '</textarea>' +
+        '<div style="margin-top:12px;"><div class="eyebrow" style="margin-bottom:6px;">' + t('Basic Tag & Keyword Checker (Transparent Match)', 'فحص الوسوم والكلمات الأساسية') + '</div><div id="es-chips" style="display:flex;flex-wrap:wrap;gap:6px;">' + chipsHtml + '</div></div>' +
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">' +
+          '<button type="button" class="btn btn-primary btn-sm" id="btn-es-save">' + t('Save Attempt', 'حفظ المحاولة') + '</button>' +
+          '<button type="button" class="btn btn-secondary btn-sm" id="btn-es-model">' + (showM ? t('Hide Model Answer', 'إخفاء الإجابة النموذجية') : t('Show Model Answer', 'عرض الإجابة النموذجية')) + '</button>' +
+          (cur.isCode ? '<button type="button" class="btn btn-secondary btn-sm" id="btn-es-pg">' + t('Test in Playground', 'اختبر في المحرر') + '</button>' : '') +
+        '</div>' +
+        (showM ? '<div class="card-beige" style="margin-top:14px;" dir="ltr"><div class="eyebrow">Model Answer</div><pre class="code-box">' + esc(cur.model) + '</pre><div class="ar-box"><div style="font-size:0.78rem;font-weight:800;color:var(--cinnamon);margin-bottom:3px;">الشرح بالعامية المصرية</div>' + esc(cur.ar) + '</div></div>' : '') +
+      '</div>' +
+      '<div class="card">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+          '<div class="eyebrow">' + t('Self-Assessment Marking Checklist', 'قائمة التقييم الذاتي') + '</div>' +
+          '<span class="badge badge-ok" id="es-rub-score">' + rubCnt + ' / ' + cur.checklist.length + '</span>' +
+        '</div>' + rubHtml +
+      '</div>';
+
+    var tBtns = root.querySelectorAll('[data-es-id]');
+    for (var j = 0; j < tBtns.length; j++) tBtns[j].addEventListener('click', function () { activeEssayId = this.getAttribute('data-es-id'); renderEssay(); });
+
+    var ta = document.getElementById('es-ta');
+    if (ta) ta.addEventListener('input', function () {
+      var m = checkTokens(this.value, cur.requiredTokens);
+      var cEl = document.getElementById('es-hit-cnt'), chEl = document.getElementById('es-chips');
+      if (cEl) cEl.textContent = m.length + ' / ' + cur.requiredTokens.length;
+      if (chEl) chEl.innerHTML = cur.requiredTokens.map(function (tk) { var ok = m.indexOf(tk) !== -1; return '<span class="kw-chip' + (ok ? ' hit' : '') + '" dir="ltr">' + (ok ? '✓ ' : '') + esc(tk) + '</span>'; }).join(' ');
+    });
+
+    document.getElementById('btn-es-save').addEventListener('click', function () {
+      var txt = ta ? ta.value : '';
+      var m = checkTokens(txt, cur.requiredTokens);
+      var rMap = essayRubric[cur.id] || {};
+      var rs = Object.keys(rMap).filter(function (k) { return rMap[k]; }).length;
+      window.WAM_STORAGE.update(function (s) {
+        s.essayDrafts[cur.id] = { text: txt, rubricScore: rs, tagHits: m.length, tagTotal: cur.requiredTokens.length, savedAt: Date.now() };
+        s.dailyDone += 1;
+        window.WAM_STORAGE.log(s, 'Coding/Essay Saved', cur.lessonId.toUpperCase() + ' (' + m.length + '/' + cur.requiredTokens.length + ' tokens)');
+      });
+      if (window.WAM_APP) { window.WAM_APP.toast(t('Attempt saved locally!', 'تم حفظ المحاولة محلياً!')); window.WAM_APP.refreshMeta(); }
+      renderEssay();
+    });
+    document.getElementById('btn-es-model').addEventListener('click', function () { essayShowModel[cur.id] = !essayShowModel[cur.id]; renderEssay(); });
+    var bPg = document.getElementById('btn-es-pg');
+    if (bPg) bPg.addEventListener('click', function () {
+      if (window.WAM_PLAYGROUND) window.WAM_PLAYGROUND.loadCode(ta ? ta.value : cur.model, 'body { font-family: sans-serif; padding: 14px; }', '');
+      if (window.WAM_APP) window.WAM_APP.navigate('playground');
+    });
+    var rCks = root.querySelectorAll('[data-rub]');
+    for (var k = 0; k < rCks.length; k++) rCks[k].addEventListener('change', function () {
+      var idx = this.getAttribute('data-rub');
+      essayRubric[cur.id] = essayRubric[cur.id] || {};
+      essayRubric[cur.id][idx] = this.checked;
+      var cnt = Object.keys(essayRubric[cur.id]).filter(function (x) { return essayRubric[cur.id][x]; }).length;
+      var bd = document.getElementById('es-rub-score'); if (bd) bd.textContent = cnt + ' / ' + cur.checklist.length;
+    });
+  }
+
+  /* ========================================================================
+     3. EXAM CENTER (5 Modes: Full, MCQ, Essay, Coding, Mixed)
+     ======================================================================== */
+  function stopTimer() { if (examTimerId) { clearInterval(examTimerId); examTimerId = null; } }
+  function fmt(sec) { return String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0'); }
+
+  function startExam(mode, mins) {
+    stopTimer();
+    var mcqs = shuffle(window.WAM_DATA.mcqs);
+    var essays = shuffle(window.WAM_DATA.essays);
+    var coding = shuffle(window.WAM_DATA.essays.filter(function (e) { return e.isCode; }));
+    var items = [];
+
+    if (mode === 'full') {
+      mcqs.slice(0, 15).forEach(function (q) { items.push({ type: 'mcq', data: q }); });
+      essays.slice(0, 5).forEach(function (e) { items.push({ type: 'essay', data: e }); });
+    } else if (mode === 'mcq') {
+      mcqs.slice(0, 20).forEach(function (q) { items.push({ type: 'mcq', data: q }); });
+    } else if (mode === 'essay') {
+      essays.slice(0, 5).forEach(function (e) { items.push({ type: 'essay', data: e }); });
+    } else if (mode === 'coding') {
+      coding.slice(0, 6).forEach(function (e) { items.push({ type: 'essay', data: e }); });
+    } else {
+      mcqs.slice(0, 10).forEach(function (q) { items.push({ type: 'mcq', data: q }); });
+      coding.slice(0, 3).forEach(function (e) { items.push({ type: 'essay', data: e }); });
+    }
+
+    exam = { mode: mode, items: items, idx: 0, answers: {}, flagged: {}, remainingSec: Math.max(1, parseInt(mins, 10) || 15) * 60, submitted: false };
+    examTimerId = setInterval(function () {
+      if (!exam || exam.submitted) { stopTimer(); return; }
+      exam.remainingSec -= 1;
+      var el = document.getElementById('exam-timer');
+      if (el) el.textContent = fmt(Math.max(0, exam.remainingSec));
+      if (exam.remainingSec <= 0) submitExam();
+    }, 1000);
+    renderExam();
+  }
+
+  function submitExam() {
+    if (!exam || exam.submitted) return;
+    stopTimer();
+    exam.submitted = true;
+    var mcqT = 0, mcqC = 0;
+    exam.items.forEach(function (it, i) {
+      if (it.type === 'mcq') {
+        mcqT++;
+        var ok = exam.answers[i] === it.data.correct;
+        if (ok) mcqC++;
+        window.WAM_STORAGE.recordMcq(it.data.id, ok);
+      }
+    });
+    var pct = mcqT ? Math.round((mcqC / mcqT) * 100) : 100;
+    window.WAM_STORAGE.update(function (s) {
+      s.examHistory.unshift({ ts: Date.now(), mode: exam.mode, correct: mcqC, total: mcqT, pct: pct });
+      if (s.examHistory.length > 20) s.examHistory = s.examHistory.slice(0, 20);
+      window.WAM_STORAGE.log(s, 'Exam (' + exam.mode + ')', mcqT ? (mcqC + '/' + mcqT + ' (' + pct + '%)') : 'Completed');
+    });
+    if (window.WAM_APP) window.WAM_APP.refreshMeta();
+    renderExam();
+  }
+
+  function renderExam() {
+    var root = document.getElementById('view-exam');
+    if (!root) return;
+    if (!exam) {
+      var modes = [
+        { id: 'full', en: 'Full Midterm Exam', ar: 'امتحان ميدتيرم كامل', descEn: '15 MCQs + 5 Coding/Essay Questions', descAr: '15 اختياري + 5 مقالي/كود', min: 30 },
+        { id: 'mcq', en: 'MCQ Exam', ar: 'امتحان اختيار من متعدد', descEn: '20 Randomized Syllabus MCQs', descAr: '20 سؤال اختيار من متعدد', min: 20 },
+        { id: 'essay', en: 'Essay Exam', ar: 'امتحان مقالي', descEn: '5 Core Midterm Explanations & Lists', descAr: '5 أسئلة مقالية أساسية', min: 20 },
+        { id: 'coding', en: 'Coding Exam', ar: 'امتحان كتابة أكواد HTML', descEn: '6 Practical HTML Coding Prompts', descAr: '6 تمارين كتابة كود HTML', min: 25 },
+        { id: 'mixed', en: 'Mixed Exam', ar: 'امتحان مختلط', descEn: '10 MCQs + 3 HTML Coding Tasks', descAr: '10 اختياري + 3 كتابة كود', min: 20 }
+      ];
+      root.innerHTML =
+        '<div class="page-head"><div class="eyebrow">' + t('Exam Center · 5 Realistic Modes', 'مركز الامتحانات · 5 أوضاع') + '</div><h1 class="page-title">' + t('Midterm Exam Simulator', 'محاكي امتحان الميدتيرم') + '</h1><p class="page-sub">' + t('Timed exams covering all 13 PDF topics with question navigation, mark for review, and instant grading.', 'امتحانات بوقت تغطي الـ 13 درساً مع تنقل بين الأسئلة وتصحيح فوري.') + '</p></div>' +
+        '<div class="grid-2">' + modes.map(function (m) {
+          return '<div class="card"><h3 style="margin:0 0 4px;font-family:var(--font-serif);">' + t(m.en, m.ar) + '</h3><p style="margin:0 0 12px;font-size:0.88rem;color:var(--muted);">' + t(m.descEn, m.descAr) + '</p><div style="display:flex;align-items:center;gap:8px;"><label style="font-size:0.82rem;color:var(--muted);">' + t('Min:', 'دقائق:') + '</label><input type="number" class="input" min="3" max="120" value="' + m.min + '" id="edur-' + m.id + '" style="width:74px;"><button type="button" class="btn btn-primary btn-sm" data-ex-mode="' + m.id + '">' + t('Start', 'ابدأ') + '</button></div></div>';
+        }).join('') + '</div>';
+      var bts = root.querySelectorAll('[data-ex-mode]');
+      for (var i = 0; i < bts.length; i++) bts[i].addEventListener('click', function () { var id = this.getAttribute('data-ex-mode'); startExam(id, document.getElementById('edur-' + id).value); });
+      return;
+    }
+
+    if (exam.submitted) {
+      var mcqT = 0, mcqC = 0;
+      exam.items.forEach(function (it, i) { if (it.type === 'mcq') { mcqT++; if (exam.answers[i] === it.data.correct) mcqC++; } });
+      var pct = mcqT ? Math.round((mcqC / mcqT) * 100) : null;
+      root.innerHTML =
+        '<div class="page-head"><div class="eyebrow">' + t('Exam Performance Report', 'تقرير أداء الامتحان') + '</div><h1 class="page-title">' + (pct !== null ? (t('MCQ Score: ', 'درجة الاختياري: ') + mcqC + '/' + mcqT + ' (' + pct + '%)') : t('Exam Submitted', 'تم تسليم الامتحان')) + '</h1></div>' +
+        '<div class="card">' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;"><button type="button" class="btn btn-primary" id="btn-ex-retake">' + t('Retake Exam', 'إعادة الامتحان') + '</button><button type="button" class="btn btn-secondary" id="btn-ex-all">' + t('All Modes', 'كل الأوضاع') + '</button></div>' +
+          exam.items.map(function (it, i) {
+            if (it.type === 'mcq') {
+              var ch = exam.answers[i], ok = ch === it.data.correct;
+              return '<div class="card-beige" style="margin-top:8px;" dir="ltr"><div style="display:flex;justify-content:space-between;"><strong>Q' + (i + 1) + ': ' + esc(it.data.q) + '</strong><span class="badge ' + (ok ? 'badge-ok' : 'badge-err') + '">' + (ok ? 'Correct' : 'Wrong') + '</span></div><div style="font-size:0.85rem;margin-top:4px;">Your answer: <strong>' + esc(ch !== undefined ? it.data.opts[ch] : 'Unanswered') + '</strong> · Correct: <strong style="color:var(--ok);">' + esc(it.data.opts[it.data.correct]) + '</strong></div><div style="font-size:0.83rem;color:var(--muted);">' + esc(it.data.exp) + '</div></div>';
+            }
+            var txt = exam.answers[i] || '', m = checkTokens(txt, it.data.requiredTokens);
+            return '<div class="card-beige" style="margin-top:8px;" dir="ltr"><div style="display:flex;justify-content:space-between;"><strong>Q' + (i + 1) + ' (' + esc(it.data.style) + '): ' + esc(it.data.prompt) + '</strong><span class="badge badge-beige">' + m.length + '/' + it.data.requiredTokens.length + ' tokens</span></div><pre class="code-box" style="margin:6px 0;">' + esc(txt || '(No answer)') + '</pre><div style="font-size:0.84rem;color:var(--ok);"><strong>Model Answer:</strong><pre class="code-box" style="margin:4px 0 0;">' + esc(it.data.model) + '</pre></div></div>';
+          }).join('') +
+        '</div>';
+      document.getElementById('btn-ex-retake').addEventListener('click', function () { startExam(exam.mode, 15); });
+      document.getElementById('btn-ex-all').addEventListener('click', function () { exam = null; renderExam(); });
+      return;
+    }
+
+    var cur = exam.items[exam.idx];
+    var navGrid = exam.items.map(function (it, i) {
+      var ans = exam.answers[i] !== undefined && exam.answers[i] !== '', flg = !!exam.flagged[i];
+      var st = 'min-width:36px;height:34px;padding:0 6px;border-radius:4px;font-size:0.8rem;font-weight:700;border:1px solid var(--border);';
+      if (i === exam.idx) st += 'background:#5C3D2E;color:#FCF9F3;border-color:#5C3D2E;';
+      else if (flg) st += 'background:var(--warn-bg);color:var(--warn);border-color:var(--warn);';
+      else if (ans) st += 'background:var(--ok-bg);color:var(--ok);border-color:var(--ok);';
+      else st += 'background:var(--surface);color:var(--text);';
+      return '<button type="button" data-ex-nav="' + i + '" style="' + st + '">' + (i + 1) + (flg ? '⚑' : '') + '</button>';
+    }).join('');
+
+    var qBody = cur.type === 'mcq'
+      ? '<h2 style="margin:0 0 10px;font-size:1.1rem;" dir="ltr">' + esc(cur.data.q) + '</h2><div class="opt-list">' +
+          cur.data.opts.map(function (o, oi) {
+            return '<button type="button" class="opt-btn' + (exam.answers[exam.idx] === oi ? ' selected' : '') + '" data-ex-opt="' + oi + '"><span class="opt-key">' + ['A','B','C','D'][oi] + '</span><span dir="ltr">' + esc(o) + '</span></button>';
+          }).join('') + '</div>'
+      : '<div class="badge badge-beige" style="margin-bottom:8px;">' + esc(cur.data.style) + '</div><h2 style="margin:0 0 10px;font-size:1.08rem;" dir="ltr">' + esc(cur.data.prompt) + '</h2><textarea id="ex-ta" class="' + (cur.data.isCode ? 'code-editor' : 'textarea') + '" dir="ltr" placeholder="Write your answer...">' + esc(exam.answers[exam.idx] || '') + '</textarea>';
+
+    root.innerHTML =
+      '<div class="card-beige" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">' +
+        '<div><strong>Q' + (exam.idx + 1) + ' / ' + exam.items.length + '</strong> · <span class="badge badge-beige">' + (cur.type === 'mcq' ? 'MCQ' : 'Written/Code') + '</span></div>' +
+        '<div style="display:flex;align-items:center;gap:10px;"><span style="font-weight:800;color:var(--coffee);">⏱ <span id="exam-timer">' + fmt(exam.remainingSec) + '</span></span><button type="button" class="btn btn-primary btn-sm" id="btn-ex-sub">' + t('Submit Exam', 'تسليم الامتحان') + '</button></div>' +
+      '</div>' +
+      '<div class="card" style="margin-bottom:14px;">' + qBody +
+        '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:14px;">' +
+          '<button type="button" class="btn btn-secondary btn-sm" id="btn-ex-flag">' + (exam.flagged[exam.idx] ? t('Unmark ⚑', 'إلغاء ⚑') : t('Mark for Review ⚑', 'للمراجعة ⚑')) + '</button>' +
+          '<div style="display:flex;gap:8px;"><button type="button" class="btn btn-secondary" id="btn-ex-p"' + (exam.idx === 0 ? ' disabled' : '') + '>' + t('← Prev', '→ السابق') + '</button><button type="button" class="btn btn-primary" id="btn-ex-n"' + (exam.idx === exam.items.length - 1 ? ' disabled' : '') + '>' + t('Next →', 'التالي ←') + '</button></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card"><div class="eyebrow" style="margin-bottom:8px;">' + t('Question Navigation', 'التنقل بين الأسئلة') + '</div><div style="display:flex;flex-wrap:wrap;gap:6px;">' + navGrid + '</div></div>';
+
+    var os = root.querySelectorAll('[data-ex-opt]');
+    for (var x = 0; x < os.length; x++) os[x].addEventListener('click', function () { exam.answers[exam.idx] = parseInt(this.getAttribute('data-ex-opt'), 10); renderExam(); });
+    var ta = document.getElementById('ex-ta'); if (ta) ta.addEventListener('input', function () { exam.answers[exam.idx] = this.value; });
+    var ns = root.querySelectorAll('[data-ex-nav]');
+    for (var y = 0; y < ns.length; y++) ns[y].addEventListener('click', function () { exam.idx = parseInt(this.getAttribute('data-ex-nav'), 10); renderExam(); });
+    document.getElementById('btn-ex-flag').addEventListener('click', function () { exam.flagged[exam.idx] = !exam.flagged[exam.idx]; renderExam(); });
+    document.getElementById('btn-ex-p').addEventListener('click', function () { if (exam.idx > 0) { exam.idx--; renderExam(); } });
+    document.getElementById('btn-ex-n').addEventListener('click', function () { if (exam.idx < exam.items.length - 1) { exam.idx++; renderExam(); } });
+    document.getElementById('btn-ex-sub').addEventListener('click', function () {
+      var ansCnt = Object.keys(exam.answers).filter(function (k) { return exam.answers[k] !== '' && exam.answers[k] !== undefined; }).length;
+      if (window.WAM_APP) {
+        window.WAM_APP.confirmModal(t('Submit Exam?', 'تسليم الامتحان؟'), t('Answered ' + ansCnt + ' of ' + exam.items.length + ' questions.', 'أجبت على ' + ansCnt + ' من ' + exam.items.length + ' سؤالاً.'), t('Submit Now', 'تسليم الآن'), submitExam);
+      } else submitExam();
+    });
+  }
+
+  return { renderMcq: renderMcq, renderEssay: renderEssay, renderExam: renderExam, startExam: startExam, submitExam: submitExam, checkTokens: checkTokens };
+})();
+
+
+/* ==========================================================================
+   Web App Mastery — Educational Game Zone (js/games.js)
+   All 6 Games:
+   1. HTML Tag Detective   2. Complete the Code   3. Find the Error
+   4. Match the Terms      5. True or False       6. Build the Page
+   Points, Levels, Timers, Streaks, Best Scores & Instant Explanations.
+   ========================================================================== */
+
+window.WAM_GAMES = (function () {
+  var active = null;
+  var timerId = null;
+
+  var META = [
+    { id: 'detective', en: '1. HTML Tag Detective', ar: '1. محقق وسوم HTML', descEn: 'Read a description and identify the exact HTML tag or attribute.', descAr: 'اقرأ الوصف واختر الوسم أو الخاصية الصحيحة.' },
+    { id: 'complete', en: '2. Complete the Code', ar: '2. أكمل الكود الناقص', descEn: 'Type the missing HTML tag or attribute to complete the snippet.', descAr: 'اكتب الجزء الناقص لإكمال كود HTML.' },
+    { id: 'findError', en: '3. Find the Error', ar: '3. اكتشف الخطأ', descEn: 'Spot and fix real HTML/CSS bugs (including the PDF HEX trap!).', descAr: 'اكتشف وصلّح أخطاء أكواد HTML و CSS.' },
+    { id: 'match', en: '4. Match the Terms', ar: '4. طابق المصطلحات', descEn: 'Timed matching of Web APIs and HTML features to definitions.', descAr: 'طابق واجهات الويب والمصطلحات مع مؤقت.' },
+    { id: 'tf', en: '5. True or False', ar: '5. صح أم خطأ', descEn: 'Fast syllabus checks with instant explanations.', descAr: 'عبارات سريعة من المنهج مع الشرح الفوري.' },
+    { id: 'buildPage', en: '6. Build the Page', ar: '6. ابنِ الصفحة بنفسك', descEn: 'Write real HTML code to match a target and preview it live.', descAr: 'اكتب كود HTML لتحقيق الهدف وشاهد المعاينة.' }
+  ];
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function t(en, ar) { return (window.WAM_APP && window.WAM_APP.getLang() === 'ar') ? ar : en; }
+  function shuffle(a) { var c = a.slice(); for (var i = c.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = c[i]; c[i] = c[j]; c[j] = x; } return c; }
+  function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+
+  function levelFor(score) { return score >= 70 ? 3 : (score >= 30 ? 2 : 1); }
+
+  function startGame(id) {
+    stopTimer();
+    var g = window.WAM_DATA.games;
+    if (id === 'match') {
+      var pairs = shuffle(g.match);
+      active = { id: id, pairs: pairs, terms: shuffle(pairs), defs: shuffle(pairs), selTerm: null, matched: {}, score: 0, streak: 0, maxStreak: 0, sec: 0, msg: '', ok: null, done: false };
+    } else {
+      active = { id: id, items: id === 'buildPage' ? g.buildPage.slice() : shuffle(g[id] || []), idx: 0, score: 0, streak: 0, maxStreak: 0, okCnt: 0, answered: false, chosen: null, lastOk: false, lastExp: '', sec: 0, done: false, codeVal: '' };
+      if (id === 'buildPage' && active.items.length) active.codeVal = active.items[0].starter || '';
+    }
+    timerId = setInterval(function () {
+      if (!active || active.done) { stopTimer(); return; }
+      active.sec += 1;
+      var el = document.getElementById('g-timer');
+      if (el) el.textContent = active.sec + 's';
+    }, 1000);
+    render();
+  }
+
+  function finish() {
+    stopTimer();
+    if (!active) return;
+    active.done = true;
+    window.WAM_STORAGE.saveGameBest(active.id, active.score);
+    if (window.WAM_APP) window.WAM_APP.refreshMeta();
+    render();
+  }
+
+  function recordOutcome(isOk, exp) {
+    active.answered = true;
+    active.lastOk = isOk;
+    active.lastExp = exp || '';
+    if (isOk) {
+      active.streak += 1;
+      if (active.streak > active.maxStreak) active.maxStreak = active.streak;
+      active.okCnt += 1;
+      active.score += 15 + (active.streak > 1 ? (active.streak - 1) * 5 : 0);
+    } else {
+      active.streak = 0;
+    }
+    render();
+  }
+
+  function nextRound() {
+    if (!active) return;
+    if (active.idx < active.items.length - 1) {
+      active.idx += 1;
+      active.answered = false;
+      active.chosen = null;
+      if (active.id === 'buildPage') active.codeVal = active.items[active.idx].starter || '';
+      render();
+    } else finish();
+  }
+
+  function render() {
+    var root = document.getElementById('view-games');
+    if (!root) return;
+    var st = window.WAM_STORAGE.load();
+
+    if (!active) {
+      root.innerHTML =
+        '<div class="page-head"><div class="eyebrow">' + t('Educational Game Zone · 6 HTML Games', 'منطقة الألعاب · 6 ألعاب تعليمية') + '</div><h1 class="page-title">' + t('Practice HTML Through Play', 'أتقن HTML من خلال الألعاب') + '</h1><p class="page-sub">' + t('Earn points, climb levels, track streaks, and beat your personal best across all 6 coding challenges.', 'اجمع النقاط واصعد المستويات وحطم أرقامك القياسية في 6 تحديات برمجية.') + '</p></div>' +
+        '<div class="grid-3">' + META.map(function (m) {
+          var best = st.gameBest[m.id] || 0;
+          return '<div class="card" style="display:flex;flex-direction:column;justify-content:space-between;gap:12px;"><div><span class="badge badge-beige" style="margin-bottom:6px;">' + t('Best: ', 'الأفضل: ') + best + '</span><h3 style="margin:0 0 6px;font-family:var(--font-serif);font-size:1.06rem;">' + t(m.en, m.ar) + '</h3><p style="margin:0;font-size:0.86rem;color:var(--muted);">' + t(m.descEn, m.descAr) + '</p></div><button type="button" class="btn btn-primary btn-sm" data-play="' + m.id + '">' + t('Play Now', 'العب الآن') + '</button></div>';
+        }).join('') + '</div>';
+      var bs = root.querySelectorAll('[data-play]');
+      for (var i = 0; i < bs.length; i++) bs[i].addEventListener('click', function () { startGame(this.getAttribute('data-play')); });
+      return;
+    }
+
+    var meta = META[0];
+    for (var k = 0; k < META.length; k++) if (META[k].id === active.id) { meta = META[k]; break; }
+    var best = Math.max(st.gameBest[active.id] || 0, active.score);
+
+    var hud =
+      '<div class="card-beige" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px;">' +
+        '<div style="display:flex;align-items:center;gap:10px;"><button type="button" class="btn btn-secondary btn-sm" id="g-back">' + t('← Games', '→ الألعاب') + '</button><strong>' + t(meta.en, meta.ar) + '</strong></div>' +
+        '<div style="display:flex;gap:12px;font-size:0.84rem;font-weight:700;flex-wrap:wrap;">' +
+          '<span>Score: ' + active.score + '</span><span>Lvl ' + levelFor(active.score) + '</span><span>Streak: ' + active.streak + '🔥</span><span>Best: ' + best + '</span><span>⏱ <span id="g-timer">' + active.sec + 's</span></span>' +
+        '</div>' +
+      '</div>';
+
+    if (active.done) {
+      root.innerHTML = hud + '<div class="card" style="text-align:center;padding:28px 18px;"><div class="eyebrow">' + t('Challenge Complete!', 'انتهى التحدي!') + '</div><h2 style="margin:6px 0;font-family:var(--font-serif);font-size:1.65rem;">Score: ' + active.score + ' (Level ' + levelFor(active.score) + ')</h2><p style="color:var(--muted);margin:0 0 16px;">Max Streak: ' + active.maxStreak + ' · Time: ' + active.sec + 's · Best Saved: ' + best + '</p><div style="display:flex;justify-content:center;gap:8px;"><button type="button" class="btn btn-primary" id="g-again">' + t('Play Again', 'العب مجدداً') + '</button><button type="button" class="btn btn-secondary" id="g-hub">' + t('All Games', 'كل الألعاب') + '</button></div></div>';
+      document.getElementById('g-back').addEventListener('click', function () { stopTimer(); active = null; render(); });
+      document.getElementById('g-again').addEventListener('click', function () { startGame(active.id); });
+      document.getElementById('g-hub').addEventListener('click', function () { stopTimer(); active = null; render(); });
+      return;
+    }
+
+    if (active.id === 'match') {
+      root.innerHTML = hud + '<div class="card">' +
+        (active.msg ? '<div class="fb-box ' + (active.ok ? 'ok' : 'err') + '" style="margin-bottom:10px;">' + esc(active.msg) + '</div>' : '') +
+        '<div class="grid-2">' +
+          '<div><div class="eyebrow" style="margin-bottom:6px;">Terms</div><div class="opt-list">' + active.terms.map(function (p) { var d = !!active.matched[p.id]; return '<button type="button" class="opt-btn' + (d ? ' ok' : (active.selTerm === p.id ? ' selected' : '')) + '" data-mt="' + p.id + '"' + (d ? ' disabled' : '') + ' dir="ltr"><strong>' + esc(p.term) + '</strong></button>'; }).join('') + '</div></div>' +
+          '<div><div class="eyebrow" style="margin-bottom:6px;">Definitions</div><div class="opt-list">' + active.defs.map(function (p) { var d = !!active.matched[p.id]; return '<button type="button" class="opt-btn' + (d ? ' ok' : '') + '" data-md="' + p.id + '"' + (d ? ' disabled' : '') + ' dir="ltr">' + esc(p.def) + '</button>'; }).join('') + '</div></div>' +
+        '</div></div>';
+      document.getElementById('g-back').addEventListener('click', function () { stopTimer(); active = null; render(); });
+      var ts = root.querySelectorAll('[data-mt]'), ds = root.querySelectorAll('[data-md]');
+      for (var a = 0; a < ts.length; a++) ts[a].addEventListener('click', function () { active.selTerm = this.getAttribute('data-mt'); render(); });
+      for (var b = 0; b < ds.length; b++) ds[b].addEventListener('click', function () {
+        if (!active.selTerm) { active.ok = false; active.msg = 'Select a term first!'; render(); return; }
+        var did = this.getAttribute('data-md');
+        if (did === active.selTerm) {
+          active.matched[did] = true; active.streak += 1; if (active.streak > active.maxStreak) active.maxStreak = active.streak;
+          active.score += 15 + (active.streak > 1 ? 5 : 0); active.ok = true; active.msg = 'Matched!'; active.selTerm = null;
+          if (Object.keys(active.matched).length === active.pairs.length) { finish(); return; }
+        } else { active.streak = 0; active.ok = false; active.msg = 'Not a match — try again!'; }
+        render();
+      });
+      return;
+    }
+
+    var item = active.items[active.idx];
+    var prog = Math.round(((active.idx + 1) / active.items.length) * 100);
+    var body = '';
+
+    if (active.id === 'detective' || active.id === 'findError') {
+      body = (active.id === 'findError' ? '<pre class="code-box" dir="ltr">' + esc(item.badCode) + '</pre>' : '<h2 style="margin:0 0 8px;font-size:1.12rem;" dir="ltr">' + esc(item.desc) + '</h2>') +
+        '<div class="opt-list">' + item.opts.map(function (o, oi) {
+          var cls = 'opt-btn'; if (active.answered) { if (oi === item.ans) cls += ' ok'; else if (oi === active.chosen) cls += ' err'; }
+          return '<button type="button" class="' + cls + '" data-gc="' + oi + '"' + (active.answered ? ' disabled' : '') + ' dir="ltr">' + esc(o) + '</button>';
+        }).join('') + '</div>';
+    } else if (active.id === 'tf') {
+      body = '<h2 style="margin:0 0 8px;font-size:1.12rem;" dir="ltr">' + esc(item.s) + '</h2><div class="opt-list">' +
+        [true, false].map(function (v) {
+          var cls = 'opt-btn'; if (active.answered) { if (v === item.ans) cls += ' ok'; else if (v === active.chosen) cls += ' err'; }
+          return '<button type="button" class="' + cls + '" data-gb="' + v + '"' + (active.answered ? ' disabled' : '') + '>' + (v ? 'True (صح)' : 'False (خطأ)') + '</button>';
+        }).join('') + '</div>';
+    } else if (active.id === 'complete') {
+      body = '<p style="font-weight:700;margin:0 0 8px;" dir="ltr">' + esc(item.prompt) + '</p>' +
+        '<div class="code-box" dir="ltr" style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">' +
+          '<span>' + esc(item.before) + '</span>' +
+          '<input id="g-fill-inp" class="input" style="width:170px;background:#FCF9F3;color:#2A201A;font-family:var(--font-mono);" placeholder="type here..."' + (active.answered ? ' disabled' : '') + '>' +
+          '<span>' + esc(item.after) + '</span>' +
+        '</div>' +
+        (!active.answered ? '<button type="button" class="btn btn-primary btn-sm" id="g-fill-chk" style="margin-top:8px;">Check Code</button>' : '');
+    } else if (active.id === 'buildPage') {
+      body = '<h3 style="margin:0 0 4px;" dir="ltr">' + esc(item.title) + '</h3>' +
+        '<p style="margin:0 0 10px;font-size:0.9rem;color:var(--muted);" dir="ltr">Target: ' + esc(item.goal) + '</p>' +
+        '<div class="grid-2" dir="ltr">' +
+          '<div><textarea id="g-bp-ta" class="code-editor">' + esc(active.codeVal) + '</textarea><div style="display:flex;gap:8px;margin-top:8px;"><button type="button" class="btn btn-primary btn-sm" id="g-bp-chk">Check &amp; Preview</button></div></div>' +
+          '<div><iframe id="g-bp-frame" class="preview-frame" style="min-height:175px;" sandbox="allow-scripts" title="Build Challenge Preview"></iframe></div>' +
+        '</div>';
+    }
+
+    root.innerHTML = hud + '<div class="card">' +
+      '<div style="font-size:0.82rem;color:var(--muted);margin-bottom:6px;">Round ' + (active.idx + 1) + ' of ' + active.items.length + '</div>' +
+      '<div class="progress-track" style="margin-bottom:14px;"><div class="progress-fill" style="width:' + prog + '%;"></div></div>' +
+      body +
+      (active.answered ? '<div class="fb-box ' + (active.lastOk ? 'ok' : 'err') + '" dir="ltr"><strong>' + (active.lastOk ? 'Correct! ' : 'Not quite. ') + '</strong>' + esc(active.lastExp) + '</div><div style="margin-top:12px;"><button type="button" class="btn btn-primary" id="g-next">' + (active.idx < active.items.length - 1 ? 'Next Round →' : 'See Results') + '</button></div>' : '') +
+    '</div>';
+
+    document.getElementById('g-back').addEventListener('click', function () { stopTimer(); active = null; render(); });
+    var cs = root.querySelectorAll('[data-gc]');
+    for (var x = 0; x < cs.length; x++) cs[x].addEventListener('click', function () { var v = parseInt(this.getAttribute('data-gc'), 10); active.chosen = v; recordOutcome(v === item.ans, item.exp); });
+    var bs2 = root.querySelectorAll('[data-gb]');
+    for (var y = 0; y < bs2.length; y++) bs2[y].addEventListener('click', function () { var v = this.getAttribute('data-gb') === 'true'; active.chosen = v; recordOutcome(v === item.ans, item.exp); });
+
+    var fChk = document.getElementById('g-fill-chk');
+    if (fChk) fChk.addEventListener('click', function () {
+      var val = (document.getElementById('g-fill-inp').value || '').trim().toLowerCase();
+      recordOutcome(val === item.answer.toLowerCase(), 'Expected: ' + item.answer + ' — ' + item.exp);
+    });
+
+    var bpFrame = document.getElementById('g-bp-frame');
+    if (bpFrame) bpFrame.srcdoc = '<!DOCTYPE html><html><body style="font-family:sans-serif;padding:10px;">' + active.codeVal + '</body></html>';
+    var bpChk = document.getElementById('g-bp-chk');
+    if (bpChk) bpChk.addEventListener('click', function () {
+      active.codeVal = document.getElementById('g-bp-ta').value;
+      var lower = active.codeVal.toLowerCase();
+      var missing = item.required.filter(function (r) { return lower.indexOf(r.toLowerCase()) === -1; });
+      recordOutcome(missing.length === 0, missing.length === 0 ? 'All required HTML tags & text matched!' : ('Missing: ' + missing.join(', ')));
+    });
+
+    var nBtn = document.getElementById('g-next');
+    if (nBtn) nBtn.addEventListener('click', nextRound);
+  }
+
+  return { render: render, startGame: startGame };
+})();
+
+
+/* ==========================================================================
+   Web App Mastery — Main Application Controller (js/app.js)
+   Dashboard (with Streak & Recommended Lessons), Question Bank, Flashcards,
+   Progress & Stats (Reset Modal), Sidebar, Theme (Light/Dark), EN/AR RTL.
+   ========================================================================== */
+
+window.WAM_APP = (function () {
+  var currentView = 'home';
+  var lang = 'en';
+  var theme = 'light';
+  var toastTimer = null;
+
+  var qbSearch = '', qbLesson = 'all', qbType = 'all', qbOpen = {}, qbOrder = null;
+  var fcIdx = 0, fcFlipped = false, fcMode = 'all', fcList = [];
+
+  var NAV = [
+    { id: 'home', en: 'Dashboard', ar: 'الرئيسية' },
+    { id: 'lessons', en: 'Learning Center (13)', ar: 'مركز التعلم (13)' },
+    { id: 'playground', en: 'Code Playground', ar: 'محرر الأكواد' },
+    { id: 'qbank', en: 'Question Bank', ar: 'بنك الأسئلة' },
+    { id: 'mcq', en: 'MCQ Practice', ar: 'اختيار من متعدد' },
+    { id: 'essay', en: 'Essay & Coding', ar: 'المقالي والكود' },
+    { id: 'exam', en: 'Exam Center', ar: 'مركز الامتحانات' },
+    { id: 'games', en: 'Game Zone (6)', ar: 'منطقة الألعاب (6)' },
+    { id: 'flashcards', en: 'Flashcards', ar: 'البطاقات التعليمية' },
+    { id: 'progress', en: 'Progress & Stats', ar: 'التقدم والإحصائيات' }
+  ];
+
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function t(en, ar) { return lang === 'ar' ? ar : en; }
+  function getLang() { return lang; }
+
+  function toast(msg) {
+    var el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
+  }
+
+  function confirmModal(title, body, okLabel, onOk) {
+    var bg = document.getElementById('modal-bg');
+    if (!bg) { onOk(); return; }
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-body').textContent = body;
+    var okB = document.getElementById('modal-ok'), canB = document.getElementById('modal-cancel');
+    okB.textContent = okLabel; canB.textContent = t('Cancel', 'إلغاء');
+    bg.classList.add('open');
+    var close = function () { bg.classList.remove('open'); };
+    canB.onclick = close;
+    okB.onclick = function () { close(); onOk(); };
+  }
+
+  function applyThemeAndLang() {
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', lang);
+    var bl = document.getElementById('btn-lang'), bt = document.getElementById('btn-theme');
+    if (bl) bl.textContent = lang === 'en' ? 'عربي' : 'EN';
+    if (bt) bt.textContent = theme === 'light' ? t('Dark', 'داكن') : t('Light', 'فاتح');
+    renderSidebar();
+    refreshMeta();
+  }
+
+  function renderSidebar() {
+    var nav = document.getElementById('side-nav');
+    if (!nav) return;
+    nav.innerHTML = NAV.map(function (it) {
+      return '<button type="button" class="side-btn' + (it.id === currentView ? ' active' : '') + '" data-nav="' + it.id + '"><span>' + t(it.en, it.ar) + '</span></button>';
+    }).join('');
+    var bs = nav.querySelectorAll('[data-nav]');
+    for (var i = 0; i < bs.length; i++) bs[i].addEventListener('click', function () { navigate(this.getAttribute('data-nav')); closeSidebar(); });
+    var sub = document.getElementById('brand-sub');
+    if (sub) sub.textContent = t('Web App Development Hub', 'منصة تطوير تطبيقات الويب');
+  }
+
+  function refreshMeta() {
+    var bc = document.getElementById('breadcrumb');
+    if (!bc) return;
+    var cur = NAV[0];
+    for (var i = 0; i < NAV.length; i++) if (NAV[i].id === currentView) { cur = NAV[i]; break; }
+    bc.textContent = t(cur.en, cur.ar);
+  }
+
+  function openSidebar() { var s = document.getElementById('sidebar'), b = document.getElementById('sidebar-backdrop'); if (s) s.classList.add('open'); if (b) b.classList.add('open'); }
+  function closeSidebar() { var s = document.getElementById('sidebar'), b = document.getElementById('sidebar-backdrop'); if (s) s.classList.remove('open'); if (b) b.classList.remove('open'); }
+
+  function calcStats(st) {
+    var totalL = window.WAM_DATA.lessons.length;
+    var doneL = st.completedLessons.length;
+    var ids = Object.keys(st.mcqStats || {});
+    var cor = 0, wrg = 0;
+    ids.forEach(function (id) { cor += st.mcqStats[id].correct || 0; wrg += st.mcqStats[id].wrong || 0; });
+    var latestExam = (st.examHistory && st.examHistory.length) ? st.examHistory[0].pct : null;
+    var overall = Math.min(100, Math.round(((doneL / totalL) * 55) + ((ids.length / window.WAM_DATA.mcqs.length) * 45)));
+    return { totalL: totalL, doneL: doneL, solved: ids.length, cor: cor, wrg: wrg, latestExam: latestExam, overall: overall };
+  }
+
+  function getWeakLessons(st) {
+    var out = [];
+    window.WAM_DATA.lessons.forEach(function (l) {
+      var w = 0;
+      window.WAM_DATA.mcqs.forEach(function (q) { if (q.lessonId === l.id && st.mcqStats[q.id]) w += st.mcqStats[q.id].wrong || 0; });
+      if (w > 0 || st.completedLessons.indexOf(l.id) === -1) out.push({ lesson: l, wrong: w });
+    });
+    out.sort(function (a, b) { return b.wrong - a.wrong; });
+    return out;
+  }
+
+  /* ========================================================================
+     MAIN DASHBOARD
+     ======================================================================== */
+  function renderHome() {
+    var root = document.getElementById('view-home');
+    if (!root) return;
+    var st = window.WAM_STORAGE.load();
+    var m = calcStats(st);
+    var goalPct = Math.min(100, Math.round((st.dailyDone / Math.max(1, st.dailyGoal)) * 100));
+    var weak = getWeakLessons(st).slice(0, 4);
+
+    var actHtml = (st.recentActivity && st.recentActivity.length)
+      ? st.recentActivity.slice(0, 5).map(function (a) {
+          return '<div style="display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.86rem;"><strong>' + esc(a.title) + '</strong><span style="color:var(--muted);">' + esc(a.detail) + '</span></div>';
+        }).join('')
+      : '<div class="empty-box">' + t('No activity yet. Start Lesson 1 or open the Code Playground!', 'لا يوجد نشاط بعد. ابدأ بالدرس الأول أو محرر الأكواد!') + '</div>';
+
+    root.innerHTML =
+      '<div class="page-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">' +
+        '<div>' +
+          '<div class="eyebrow">' + t('Web App Mastery · Midterm Study Platform', 'إتقان تطبيقات الويب · منصة الميدتيرم') + '</div>' +
+          '<h1 class="page-title">' + t('Welcome to Web App Mastery', 'أهلاً بك في منصة Web App Mastery') + '</h1>' +
+          '<p class="page-sub">' + t('Master all 13 HTML & Web APIs Midterm topics with live code demos, a sandboxed playground, essays, games, and timed exams.', 'أتقن دروس HTML و Web APIs الـ 13 من خلال التجارب الحية ومحرر الأكواد والتدريبات والامتحانات.') + '</p>' +
+        '</div>' +
+        '<button type="button" class="btn btn-primary" id="btn-cont">' + t('Continue Learning →', 'متابعة التعلم ←') + '</button>' +
+      '</div>' +
+
+      '<div class="stats-grid">' +
+        '<div class="stat-box"><div class="stat-k">' + t('Overall Progress', 'التقدم الكلي') + '</div><div class="stat-v">' + m.overall + '%</div></div>' +
+        '<div class="stat-box"><div class="stat-k">' + t('Lessons Completed', 'الدروس المكتملة') + '</div><div class="stat-v">' + m.doneL + ' / ' + m.totalL + '</div></div>' +
+        '<div class="stat-box"><div class="stat-k">' + t('Correct / Incorrect', 'صحيح / خطأ') + '</div><div class="stat-v">' + m.cor + ' / ' + m.wrg + '</div></div>' +
+        '<div class="stat-box"><div class="stat-k">' + t('Latest Exam · Streak', 'آخر امتحان · السلسلة') + '</div><div class="stat-v">' + (m.latestExam !== null ? m.latestExam + '%' : '—') + ' · ' + (st.streak || 1) + 'd</div></div>' +
+      '</div>' +
+
+      '<div class="grid-2" style="margin-bottom:16px;">' +
+        '<div class="card">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><div class="eyebrow">' + t('Daily Study Goal', 'الهدف الدراسي اليومي') + '</div><span class="badge badge-ok">' + st.dailyDone + ' / ' + st.dailyGoal + '</span></div>' +
+          '<div class="progress-track" style="margin-bottom:10px;"><div class="progress-fill" style="width:' + goalPct + '%;"></div></div>' +
+          '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">' +
+            '<button type="button" class="btn btn-secondary btn-sm" data-go="playground">' + t('Open Code Playground', 'فتح محرر الأكواد') + '</button>' +
+            '<button type="button" class="btn btn-secondary btn-sm" data-go="exam">' + t('Take Timed Exam', 'ابدأ امتحاناً') + '</button>' +
+            '<button type="button" class="btn btn-secondary btn-sm" data-go="games">' + t('Play 6 Games', 'العب 6 ألعاب') + '</button>' +
+          '</div>' +
+        '</div>' +
+
+        '<div class="card">' +
+          '<div class="eyebrow" style="margin-bottom:8px;">' + t('Recommended Lessons (Weak & Unfinished)', 'الدروس الموصى بها') + '</div>' +
+          weak.map(function (w) {
+            return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);">' +
+              '<div><strong style="font-size:0.9rem;">L' + w.lesson.num + ': ' + esc(lang === 'ar' ? w.lesson.titleAr : w.lesson.titleEn) + '</strong><div style="font-size:0.76rem;color:var(--muted);">' + (w.wrong ? (w.wrong + ' wrong answers') : t('Not completed yet', 'لم يكتمل بعد')) + '</div></div>' +
+              '<button type="button" class="btn btn-secondary btn-sm" data-open-l="' + w.lesson.id + '">' + t('Study', 'ادرس') + '</button>' +
+            '</div>';
+          }).join('') +
+        '</div>' +
+      '</div>' +
+
+      '<div class="card"><div class="eyebrow" style="margin-bottom:8px;">' + t('Recent Activity', 'النشاط الأخير') + '</div>' + actHtml + '</div>';
+
+    document.getElementById('btn-cont').addEventListener('click', function () { navigate('lessons'); });
+    var gs = root.querySelectorAll('[data-go]');
+    for (var i = 0; i < gs.length; i++) gs[i].addEventListener('click', function () { navigate(this.getAttribute('data-go')); });
+    var ls = root.querySelectorAll('[data-open-l]');
+    for (var j = 0; j < ls.length; j++) ls[j].addEventListener('click', function () { var id = this.getAttribute('data-open-l'); navigate('lessons'); if (window.WAM_LESSONS) window.WAM_LESSONS.selectLesson(id); });
+  }
+
+  /* ========================================================================
+     QUESTION BANK
+     ======================================================================== */
+  function allBank() {
+    var list = [];
+    window.WAM_DATA.lessons.forEach(function (l) { list.push({ id: 'core-' + l.id, lessonId: l.id, type: 'Original PDF', q: l.origQuestion, a: l.codeExample + '\n\n' + l.shortAnswer, ar: l.arExplain }); });
+    window.WAM_DATA.mcqs.forEach(function (m) { list.push({ id: m.id, lessonId: m.lessonId, type: 'MCQ', q: m.q, a: m.opts[m.correct] + ' — ' + m.exp, ar: '' }); });
+    window.WAM_DATA.essays.forEach(function (e) { list.push({ id: e.id, lessonId: e.lessonId, type: 'Essay/Code', q: '[' + e.style + '] ' + e.prompt, a: e.model, ar: e.ar }); });
+    return list;
+  }
+
+  function renderQBank() {
+    var root = document.getElementById('view-qbank');
+    if (!root) return;
+    var st = window.WAM_STORAGE.load();
+    var all = qbOrder || allBank();
+    var ql = qbSearch.trim().toLowerCase();
+    var filt = all.filter(function (it) {
+      if (qbLesson !== 'all' && it.lessonId !== qbLesson) return false;
+      if (qbType === 'favorites' && st.qBankFavorites.indexOf(it.id) === -1) return false;
+      else if (qbType === 'difficult' && st.qBankDifficult.indexOf(it.id) === -1) return false;
+      else if (qbType !== 'all' && qbType !== 'favorites' && qbType !== 'difficult' && it.type !== qbType) return false;
+      if (ql && it.q.toLowerCase().indexOf(ql) === -1 && it.a.toLowerCase().indexOf(ql) === -1) return false;
+      return true;
+    });
+
+    var lOpts = '<option value="all">All 13 Lessons</option>' + window.WAM_DATA.lessons.map(function (l) {
+      return '<option value="' + l.id + '"' + (qbLesson === l.id ? ' selected' : '') + '>L' + l.num + ': ' + esc(l.titleEn) + '</option>';
+    }).join('');
+
+    root.innerHTML =
+      '<div class="page-head"><div class="eyebrow">' + t('Question Bank · 13 Original + Practice', 'بنك الأسئلة الكامل') + '</div><h1 class="page-title">' + t('Searchable Question Bank', 'بنك الأسئلة القابل للبحث') + '</h1></div>' +
+      '<div class="card-beige" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">' +
+        '<input type="search" id="qb-s" class="input" style="flex:2;min-width:170px;" value="' + esc(qbSearch) + '" placeholder="' + t('Search tags, topics, questions...', 'ابحث في الأسئلة والوسوم...') + '">' +
+        '<select id="qb-l" class="select" style="flex:1;min-width:140px;">' + lOpts + '</select>' +
+        '<select id="qb-t" class="select" style="flex:1;min-width:130px;">' +
+          '<option value="all"' + (qbType === 'all' ? ' selected' : '') + '>All Types</option>' +
+          '<option value="Original PDF"' + (qbType === 'Original PDF' ? ' selected' : '') + '>Original PDF (13)</option>' +
+          '<option value="MCQ"' + (qbType === 'MCQ' ? ' selected' : '') + '>MCQ (26)</option>' +
+          '<option value="Essay/Code"' + (qbType === 'Essay/Code' ? ' selected' : '') + '>Essay/Code (13)</option>' +
+          '<option value="favorites"' + (qbType === 'favorites' ? ' selected' : '') + '>Favorites ★</option>' +
+          '<option value="difficult"' + (qbType === 'difficult' ? ' selected' : '') + '>Difficult ⚑</option>' +
+        '</select>' +
+        '<button type="button" class="btn btn-secondary btn-sm" id="qb-rand">' + t('Random', 'عشوائي') + '</button>' +
+      '</div>' +
+      (filt.length ? filt.map(function (it) {
+        var fav = st.qBankFavorites.indexOf(it.id) !== -1, diff = st.qBankDifficult.indexOf(it.id) !== -1, done = st.qBankCompleted.indexOf(it.id) !== -1, open = !!qbOpen[it.id];
+        return '<div class="card" style="margin-bottom:10px;">' +
+          '<div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:6px;">' +
+            '<div style="display:flex;gap:6px;"><span class="badge badge-beige">' + esc(it.type) + '</span><span class="badge badge-beige">' + esc(it.lessonId.toUpperCase()) + '</span>' + (done ? '<span class="badge badge-ok">✓ Done</span>' : '') + (diff ? '<span class="badge badge-err">⚑ Difficult</span>' : '') + '</div>' +
+            '<div style="display:flex;gap:6px;"><button type="button" class="btn btn-secondary btn-sm" data-qa="fav" data-qi="' + it.id + '">' + (fav ? '★' : '☆') + '</button><button type="button" class="btn btn-secondary btn-sm" data-qa="diff" data-qi="' + it.id + '">⚑</button><button type="button" class="btn btn-secondary btn-sm" data-qa="done" data-qi="' + it.id + '">✓</button></div>' +
+          '</div>' +
+          '<div style="font-weight:700;margin-bottom:8px;" dir="ltr">' + esc(it.q) + '</div>' +
+          '<button type="button" class="btn btn-secondary btn-sm" data-qt="' + it.id + '">' + (open ? t('Hide Answer', 'إخفاء الإجابة') : t('Show Model Answer', 'عرض الإجابة')) + '</button>' +
+          (open ? '<div class="card-beige" style="margin-top:8px;" dir="ltr"><pre class="code-box" style="margin:0;">' + esc(it.a) + '</pre>' + (it.ar ? '<div class="ar-box" style="margin-top:8px;">' + esc(it.ar) + '</div>' : '') + '</div>' : '') +
+        '</div>';
+      }).join('') : '<div class="empty-box">' + t('No matching questions.', 'لا توجد نتائج.') + '</div>');
+
+    document.getElementById('qb-s').addEventListener('input', function () { qbSearch = this.value; renderQBank(); });
+    document.getElementById('qb-l').addEventListener('change', function () { qbLesson = this.value; renderQBank(); });
+    document.getElementById('qb-t').addEventListener('change', function () { qbType = this.value; renderQBank(); });
+    document.getElementById('qb-rand').addEventListener('click', function () {
+      var a = allBank(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = a[i]; a[i] = a[j]; a[j] = x; }
+      qbOrder = a; renderQBank();
+    });
+    var qts = root.querySelectorAll('[data-qt]'); for (var i = 0; i < qts.length; i++) qts[i].addEventListener('click', function () { var id = this.getAttribute('data-qt'); qbOpen[id] = !qbOpen[id]; renderQBank(); });
+    var qas = root.querySelectorAll('[data-qa]'); for (var j = 0; j < qas.length; j++) qas[j].addEventListener('click', function () {
+      var act = this.getAttribute('data-qa'), id = this.getAttribute('data-qi');
+      window.WAM_STORAGE.update(function (s) {
+        var arr = act === 'fav' ? s.qBankFavorites : (act === 'diff' ? s.qBankDifficult : s.qBankCompleted);
+        var idx = arr.indexOf(id); if (idx === -1) arr.push(id); else arr.splice(idx, 1);
+      });
+      renderQBank();
+    });
+  }
+
+  /* ========================================================================
+     FLASHCARDS
+     ======================================================================== */
+  function buildFc(shuf) {
+    var st = window.WAM_STORAGE.load(), all = window.WAM_DATA.flashcards;
+    var base = fcMode === 'difficult' ? all.filter(function (c) { return st.flashStatus[c.id] === 'dont'; }) : all.slice();
+    if (shuf) for (var i = base.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var x = base[i]; base[i] = base[j]; base[j] = x; }
+    fcList = base; fcIdx = 0; fcFlipped = false;
+  }
+
+  function renderFlashcards() {
+    var root = document.getElementById('view-flashcards');
+    if (!root) return;
+    var st = window.WAM_STORAGE.load();
+    if (!fcList.length && fcMode === 'all') buildFc(false);
+    var kCnt = 0, dCnt = 0;
+    window.WAM_DATA.flashcards.forEach(function (c) { if (st.flashStatus[c.id] === 'know') kCnt++; else if (st.flashStatus[c.id] === 'dont') dCnt++; });
+
+    var body = !fcList.length
+      ? '<div class="empty-box">' + t('No difficult cards marked right now.', 'لا توجد بطاقات صعبة حالياً.') + '</div>'
+      : (function () {
+          if (fcIdx >= fcList.length) fcIdx = 0;
+          var c = fcList[fcIdx];
+          return '<div style="text-align:center;font-size:0.84rem;color:var(--muted);margin-bottom:8px;">Card ' + (fcIdx + 1) + ' / ' + fcList.length + '</div>' +
+            '<div class="flash-card" id="fc-box">' +
+              (!fcFlipped
+                ? '<div class="eyebrow" style="text-align:center;">Click Card to Flip</div><h2 style="text-align:center;margin:8px 0;font-family:var(--font-serif);font-size:1.45rem;" dir="ltr">' + esc(c.front) + '</h2>'
+                : '<div class="eyebrow">Definition &amp; Example</div><div style="font-weight:700;" dir="ltr">' + esc(c.backEn) + '</div><div class="ar-box">' + esc(c.backAr) + '</div><pre class="code-box" style="margin:0;" dir="ltr">' + esc(c.ex) + '</pre>') +
+            '</div>' +
+            '<div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">' +
+              '<button type="button" class="btn btn-secondary" id="fc-p">← Prev</button>' +
+              '<button type="button" class="btn btn-secondary" id="fc-d">Don\'t Know It</button>' +
+              '<button type="button" class="btn btn-primary" id="fc-k">Know It ✓</button>' +
+              '<button type="button" class="btn btn-secondary" id="fc-n">Next →</button>' +
+            '</div>';
+        })();
+
+    root.innerHTML =
+      '<div class="page-head"><div class="eyebrow">' + t('Flashcards · 20 Key Concepts', 'البطاقات التعليمية · 20 مفهوماً') + '</div><h1 class="page-title">' + t('Interactive Study Flashcards', 'البطاقات التعليمية التفاعلية') + '</h1></div>' +
+      '<div class="card-beige" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:16px;">' +
+        '<div style="display:flex;gap:6px;"><button type="button" class="tab' + (fcMode === 'all' ? ' active' : '') + '" id="fc-all">All (20)</button><button type="button" class="tab' + (fcMode === 'difficult' ? ' active' : '') + '" id="fc-diff">Difficult (' + dCnt + ')</button><button type="button" class="btn btn-secondary btn-sm" id="fc-shuf">Random</button></div>' +
+        '<span class="badge badge-ok">Memorized: ' + kCnt + ' / 20</span>' +
+      '</div>' + body;
+
+    document.getElementById('fc-all').addEventListener('click', function () { fcMode = 'all'; buildFc(false); renderFlashcards(); });
+    document.getElementById('fc-diff').addEventListener('click', function () { fcMode = 'difficult'; buildFc(false); renderFlashcards(); });
+    document.getElementById('fc-shuf').addEventListener('click', function () { buildFc(true); renderFlashcards(); });
+    var bx = document.getElementById('fc-box'); if (bx) bx.addEventListener('click', function () { fcFlipped = !fcFlipped; renderFlashcards(); });
+    var bp = document.getElementById('fc-p'), bn = document.getElementById('fc-n'), bk = document.getElementById('fc-k'), bd = document.getElementById('fc-d');
+    if (bp) bp.addEventListener('click', function () { fcIdx = (fcIdx - 1 + fcList.length) % fcList.length; fcFlipped = false; renderFlashcards(); });
+    if (bn) bn.addEventListener('click', function () { fcIdx = (fcIdx + 1) % fcList.length; fcFlipped = false; renderFlashcards(); });
+    if (bk) bk.addEventListener('click', function () { window.WAM_STORAGE.update(function (s) { s.flashStatus[fcList[fcIdx].id] = 'know'; s.dailyDone += 1; }); fcIdx = (fcIdx + 1) % fcList.length; fcFlipped = false; renderFlashcards(); });
+    if (bd) bd.addEventListener('click', function () { window.WAM_STORAGE.update(function (s) { s.flashStatus[fcList[fcIdx].id] = 'dont'; s.dailyDone += 1; }); fcIdx = (fcIdx + 1) % fcList.length; fcFlipped = false; renderFlashcards(); });
+  }
+
+  /* ========================================================================
+     PROGRESS & STATS
+     ======================================================================== */
+  function renderProgress() {
+    var root = document.getElementById('view-progress');
+    if (!root) return;
+    var st = window.WAM_STORAGE.load(), m = calcStats(st), weak = getWeakLessons(st).slice(0, 5);
+    var savedEssays = Object.keys(st.essayDrafts || {}).filter(function (k) { return st.essayDrafts[k] && st.essayDrafts[k].text; }).length;
+    var examRows = (st.examHistory && st.examHistory.length)
+      ? st.examHistory.slice(0, 8).map(function (e) { return '<tr><td>' + esc(e.mode) + '</td><td>' + e.correct + '/' + e.total + '</td><td><strong>' + e.pct + '%</strong></td></tr>'; }).join('')
+      : '<tr><td colspan="3" style="color:var(--muted);">No exams taken yet.</td></tr>';
+
+    root.innerHTML =
+      '<div class="page-head" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">' +
+        '<div><div class="eyebrow">' + t('Progress Tracking', 'تتبع التقدم') + '</div><h1 class="page-title">' + t('Your Performance & Mastery', 'أداؤك ومستوى الإتقان') + '</h1></div>' +
+        '<button type="button" class="btn btn-danger btn-sm" id="btn-reset-all">' + t('Reset All Progress', 'إعادة تعيين كل التقدم') + '</button>' +
+      '</div>' +
+      '<div class="stats-grid">' +
+        '<div class="stat-box"><div class="stat-k">Total Progress</div><div class="stat-v">' + m.overall + '%</div></div>' +
+        '<div class="stat-box"><div class="stat-k">Lessons Done</div><div class="stat-v">' + m.doneL + ' / 13</div></div>' +
+        '<div class="stat-box"><div class="stat-k">Correct / Wrong</div><div class="stat-v">' + m.cor + ' / ' + m.wrg + '</div></div>' +
+        '<div class="stat-box"><div class="stat-k">Coding/Essays Saved</div><div class="stat-v">' + savedEssays + ' / 13</div></div>' +
+      '</div>' +
+      '<div class="grid-2" style="margin-bottom:16px;">' +
+        '<div class="card"><div class="eyebrow" style="margin-bottom:8px;">Weak Topics &amp; Recommended Lessons</div>' +
+          weak.map(function (w) { return '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);"><span><strong>L' + w.lesson.num + ':</strong> ' + esc(w.lesson.titleEn) + '</span><button type="button" class="btn btn-secondary btn-sm" data-ol="' + w.lesson.id + '">Study</button></div>'; }).join('') +
+        '</div>' +
+        '<div class="card"><div class="eyebrow" style="margin-bottom:8px;">Exam History</div><div class="table-wrap"><table class="table"><thead><tr><th>Mode</th><th>Score</th><th>%</th></tr></thead><tbody>' + examRows + '</tbody></table></div></div>' +
+      '</div>' +
+      '<div class="card"><div class="eyebrow" style="margin-bottom:10px;">Game Zone High Scores</div><div class="grid-3">' +
+        ['detective', 'complete', 'findError', 'match', 'tf', 'buildPage'].map(function (g) {
+          return '<div class="card-beige" style="display:flex;justify-content:space-between;"><strong>' + esc(g) + '</strong><span class="badge badge-ok">' + (st.gameBest[g] || 0) + '</span></div>';
+        }).join('') +
+      '</div></div>';
+
+    var ols = root.querySelectorAll('[data-ol]');
+    for (var i = 0; i < ols.length; i++) ols[i].addEventListener('click', function () { var id = this.getAttribute('data-ol'); navigate('lessons'); if (window.WAM_LESSONS) window.WAM_LESSONS.selectLesson(id); });
+    document.getElementById('btn-reset-all').addEventListener('click', function () {
+      confirmModal(t('Reset All Progress?', 'إعادة تعيين كل التقدم؟'), t('All lessons, quiz scores, exams, code attempts, flashcards, and game high scores will be cleared.', 'سيتم مسح جميع التقدم والنتائج والمسودات.'), t('Yes, Reset', 'نعم، مسح'), function () {
+        window.WAM_STORAGE.resetAll();
+        toast(t('Progress reset.', 'تم مسح التقدم.'));
+        renderCurrentView();
+      });
+    });
+  }
+
+  function renderCurrentView() {
+    var views = document.querySelectorAll('.view');
+    for (var i = 0; i < views.length; i++) views[i].classList.remove('active');
+    var target = document.getElementById('view-' + currentView);
+    if (target) target.classList.add('active');
+    renderSidebar();
+    refreshMeta();
+
+    if (currentView === 'home') renderHome();
+    else if (currentView === 'lessons' && window.WAM_LESSONS) window.WAM_LESSONS.render();
+    else if (currentView === 'playground' && window.WAM_PLAYGROUND) window.WAM_PLAYGROUND.render();
+    else if (currentView === 'qbank') renderQBank();
+    else if (currentView === 'mcq' && window.WAM_QUIZZES) window.WAM_QUIZZES.renderMcq();
+    else if (currentView === 'essay' && window.WAM_QUIZZES) window.WAM_QUIZZES.renderEssay();
+    else if (currentView === 'exam' && window.WAM_QUIZZES) window.WAM_QUIZZES.renderExam();
+    else if (currentView === 'games' && window.WAM_GAMES) window.WAM_GAMES.render();
+    else if (currentView === 'flashcards') renderFlashcards();
+    else if (currentView === 'progress') renderProgress();
+  }
+
+  function navigate(id) { currentView = id; renderCurrentView(); if (typeof window.scrollTo === 'function') window.scrollTo(0, 0); }
+
+  function init() {
+    var st = window.WAM_STORAGE.load();
+    lang = st.lang || 'en';
+    theme = st.theme || 'light';
+
+    var bl = document.getElementById('btn-lang'), bt = document.getElementById('btn-theme'), bm = document.getElementById('btn-menu'), bk = document.getElementById('sidebar-backdrop');
+    if (bl) bl.addEventListener('click', function () { lang = lang === 'en' ? 'ar' : 'en'; window.WAM_STORAGE.update(function (s) { s.lang = lang; }); applyThemeAndLang(); renderCurrentView(); });
+    if (bt) bt.addEventListener('click', function () { theme = theme === 'light' ? 'dark' : 'light'; window.WAM_STORAGE.update(function (s) { s.theme = theme; }); applyThemeAndLang(); });
+    if (bm) bm.addEventListener('click', openSidebar);
+    if (bk) bk.addEventListener('click', closeSidebar);
+
+    applyThemeAndLang();
+    renderCurrentView();
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+  }
+
+  return { init: init, navigate: navigate, getLang: getLang, toast: toast, confirmModal: confirmModal, refreshMeta: refreshMeta, renderCurrentView: renderCurrentView };
+})();
+
+  </script>
+</body>
+</html>
